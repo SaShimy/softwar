@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  printf("Connecting..\n");
+  printf("Connecting...\n");
   zsock_t *req = zsock_new(ZMQ_REQ);
   zsock_connect(req, "tcp://localhost:%s", argv[1]);
   printf("Connected\n");
