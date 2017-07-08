@@ -3,9 +3,11 @@ NAME    =	server
 SRC     = 	server.c
 OBJ     =	$(SRC:%.c=%.o)
 RM      =	rm -f
+FLAGS	=	-Wall -Wextra -Werror -pedantic
+LIBS	=	-lczmq -lzmq
 
 $(NAME):        $(OBJ)
-	$(CC) $(OBJ) -o $(NAME) -lczmq -lzmq
+	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(LIBS)
 
 all:    $(NAME)
 

@@ -1,39 +1,33 @@
-#include <czmq.h>
+#include "server.h"
 
-int main(int argc, char *argv[])
+int get_options(t_conf *conf, int argc, char **argv) {
+  int   i;
+  int   j;
+  char  *opt[5] = {
+    "size",
+    "log",
+    "cycle",
+    "rep-port",
+    "pub-port"
+  };
+
+  for(i = 1; i < argc; ++i)
+  {
+    if (argv[i][0] == '-' && argv[i][1] == '-') {
+      for (j = 0; j < 5; j++) {
+        if (strcmp(argv[i]+2, opt[j]) == 0) {
+          printf("%s : %s\n", argv[i]+2, argv[i + 1]);
+        }
+      }
+    } else if (argv[i][0] == '-' && argv[i][1] == 'v' && argv[i][2] == '\0') {
+      conf->verbose = true;
+    }
+  }
+}
+
+int main(int argc, char **argv)
 {
-  if (argc < 2) {
-    printf("port argument is mandatory\n");
-    return 0;
-  }
-
-  zsock_t *router = zsock_new(ZMQ_ROUTER);
-  zsock_bind(router, "tcp://*:%s", argv[1]);
-
-  while (!zsys_interrupted) {
-    zmsg_t *message = zmsg_recv(router);
-
-    zframe_t *identity = zmsg_pop(message);
-    zframe_t *empty = zmsg_pop(message);
-    zframe_t *content = zmsg_pop(message);
-
-    zmsg_destroy(&message);
-    printf("Content of message is : %s", zframe_strdup(content));
-    // sleep(1);
-
-    zmsg_t *response = zmsg_new();
-
-    zmsg_prepend(response, &identity);
-    zmsg_append(response, &empty);
-    zmsg_append(response, &content);
-
-    zmsg_send(&response, router);
-    zmsg_destroy(&response);
-
-    zframe_destroy(&identity);
-    zframe_destroy(&empty);
-    zframe_destroy(&content);
-  }
-  zsock_destroy(&router);
+  t_conf conf;
+  get_options(&conf, argc, argv);
   return 0;
 }
