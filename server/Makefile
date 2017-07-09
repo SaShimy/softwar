@@ -1,20 +1,22 @@
-CC      =	gcc
-NAME    =	server
-SRC     = 	server.c
-OBJ     =	$(SRC:%.c=%.o)
-RM      =	rm -f
+CC		=	gcc
+NAME	=	server
+SRC		=	server.c		\
+			set_options.c	\
+			check_options.c
+OBJ		=	$(SRC:%.c=%.o)
+RM		=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
 LIBS	=	-lczmq -lzmq
 
-$(NAME):        $(OBJ)
+$(NAME):	$(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(LIBS)
 
-all:    $(NAME)
+all:		$(NAME)
 
 clean:
 	$(RM) $(OBJ)
 
-fclean:         clean
+fclean:		clean
 	$(RM) $(NAME)
 
-re:     fclean all
+re:			fclean all
