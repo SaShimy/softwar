@@ -32,7 +32,7 @@ int check_cycle(char *cycle)
 
 int check_log_file(char *path)
 {
-  if (!access(path, W_OK) || !access(path, F_OK))
+  if (access(path, W_OK) == -1 || access(path, F_OK) == -1)
   {
     printf("%s is not a valid path for log file.\nSet default value instead.\n", path);
     return (1);
