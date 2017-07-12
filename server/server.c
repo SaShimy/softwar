@@ -1,14 +1,8 @@
 #include "server.h"
 
 int server_send_msg(zmsg_t *message, zsock_t *router) {
-  zframe_t *identity = zmsg_pop(message);
-  zframe_t *empty = zmsg_pop(message);
-  zframe_t *content = zmsg_pop(message);
   zmsg_t *response = zmsg_new();
-
-  zmsg_destroy(&message);
-  printf("Content of message is : %s\n", zframe_strdup(content));
-  sleep(1);
+  
   zmsg_prepend(response, &identity);
   zmsg_append(response, &empty);
   zmsg_append(response, &content);
@@ -20,13 +14,24 @@ int server_send_msg(zmsg_t *message, zsock_t *router) {
   return (0);
 }
 
+int server_rcv_msg(zmsg_t *message) {
+  zframe_t *identity = zmsg_pop(message);
+  zframe_t *empty = zmsg_pop(message);
+  zframe_t *content = zmsg_pop(message);
+
+  zmsg_destroy(&message);
+  printf("Content of message is : %s\n", zframe_strdup(content));
+  return (0);
+}
+
 int listen_rep(t_conf conf) {
   zsock_t *router = zsock_new(ZMQ_ROUTER);
   zsock_bind(router, "tcp://*:%s", conf.rep_port);
 
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);
-    server_send_msg(message, router);
+    server_rcv_msg();
+    //server_send_msg(message, router);
   }
   zsock_destroy(&router);
   return (0);
@@ -64,7 +69,7 @@ int main(int argc, char **argv)
   set_default_conf(&conf);
   get_options(&conf, argc, argv);
   printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %s\n-Pub-port: %s\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
-  listen_rep(conf);
-  
+  //listen_rep(conf);
+  identify("#0x01");
   return (0);
 }

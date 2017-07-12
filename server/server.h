@@ -21,6 +21,22 @@ typedef struct  s_func
   int   (*func) (t_conf *conf, char *value);
 }               t_func;
 
+typedef struct	s_player
+{
+  char *id;
+  int energy;
+  int pos_x;
+  int pos_y;
+  int ap;
+  int orientation;// 0 up 1 right 2 bottom 3 left
+}		t_player;
+
+typedef struct	s_game
+{
+  t_conf conf;
+  t_player players[4];
+}		t_game;
+
 /*
 ** Set configuration structure
 */
