@@ -2,7 +2,12 @@
 
 int server_send_msg(zmsg_t *message, zsock_t *router) {
   zmsg_t *response = zmsg_new();
-  
+
+  // j'ai mis ça car ca bug sinon mais je ne sais plus ce qu'on a fait ici
+  zframe_t *identity = zmsg_pop(message);
+  zframe_t *empty = zmsg_pop(message);
+  zframe_t *content = zmsg_pop(message);
+   
   zmsg_prepend(response, &identity);
   zmsg_append(response, &empty);
   zmsg_append(response, &content);
@@ -30,7 +35,7 @@ int listen_rep(t_conf conf) {
 
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);
-    server_rcv_msg();
+    server_rcv_msg(message);
     //server_send_msg(message, router);
   }
   zsock_destroy(&router);
