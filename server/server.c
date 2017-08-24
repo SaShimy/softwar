@@ -1,6 +1,6 @@
 #include "server.h"
 
-int server_send_msg(zframe_t *identity, zframe_t *empty, zframe_t *content, /*void *router) {*/zsock_t *router) {
+int server_send_msg(zframe_t *identity, zframe_t *empty, zframe_t *content, zsock_t *router) {
   zmsg_t *response = zmsg_new();
 
   zmsg_prepend(response, &identity);
@@ -21,8 +21,6 @@ int server_rcv_msg(zframe_t *content) {
 }
 
 int listen_rep(t_conf conf) {
-  /*zctx_t *context = zctx_new ();
-    void *router = zsocket_new(context, ZMQ_ROUTER);*/
   zsock_t *router = zsock_new(ZMQ_ROUTER);
   zmsg_t *message;
   zframe_t *identity;
@@ -31,7 +29,6 @@ int listen_rep(t_conf conf) {
   
   zsock_bind(router, "tcp://*:%s", conf.rep_port);
   while (!zsys_interrupted) {
-    //while (!zctx_interrupted) {
     message = zmsg_recv(router);
     identity = zmsg_pop(message);
     empty = zmsg_pop(message);
@@ -41,7 +38,6 @@ int listen_rep(t_conf conf) {
     server_send_msg(identity, empty, content, router);
   }
   zsock_destroy(&router);
-  //zctx_destroy(&context);
   return (0);
 }
 
