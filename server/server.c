@@ -33,6 +33,7 @@ int main(int argc, char **argv)
   set_default_conf(&conf);
   get_options(&conf, argc, argv);
   printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %s\n-Pub-port: %s\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
+<<<<<<< HEAD
   char **map = init_map(conf.size);
   printf("%s\n", map[0][0]);
   // for (i = 0; i < conf.size; i++) {
@@ -40,5 +41,9 @@ int main(int argc, char **argv)
   // }
   // listen_rep(conf);
   // identify("#0x01");
+=======
+  listen_rep(conf);
+  //identify("#0x01");
+>>>>>>> 723a1e6f5550a513d20da1c4ef520ef87e438097
   return (0);
 }
