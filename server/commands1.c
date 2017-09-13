@@ -1,5 +1,13 @@
 #include "server.h"
 
+void showInfoUser(t_player *player)
+{
+  printf("id: %s\nenergy: %d\npos_x: %d\npos_y: %d\nap:\
+ %d\norientation: %d\nplayer: %d\n",
+	 player->id, player->energy, player->pos_x, player->pos_y,
+	 player->ap, player->orientation, player->player);
+}
+
 int isValid(char *data)
 {
   char str[4];
@@ -22,33 +30,60 @@ int isValid(char *data)
     return (1);
 }
 
-int getPos(t_game *game, char *pos)
+int getPosX(t_game *game)//, char *pos)
 {
   int i;
   int count;
   
-  for (i=0; strcmp(game->players[i].id, "\0") != 0; i++)
+  for (i=0; game->players[i].id != NULL; i++)
     {
-      if (strcmp(pos, "x") == 0)
-	{	
+      /*if (strcmp(pos, "x") == 0)
+	{*/	
 	  if (game->players[i].pos_x == 0)
 	    {
 	      count++;
 	    }
-	}
-      if (strcmp(pos, "y") == 0)
+	  //}
+      /*      if (strcmp(pos, "y") == 0)
 	{
-	  if (game->players[i].pos_y == 0)
+	  if ((game->players[i].pos_x == 0 && game->players[i].pos_y == 0) ||
+	      (game->players[i].pos_y == 0 && game->players[i].pos_x == game->conf->size - 1))
 	    {
 	      count++;
 	    }
-	}
+	    }*/
     }
   if (count == 2)
     {
-      return (game->conf.size - 1);
+      return (game->conf->size - 1);
     }
   return (0);
+}
+
+int getPos(t_game *game, t_player *player)
+{
+  int i;
+  
+  if (player->player == 1)
+    {
+      player->pos_x = 0;
+      player->pos_y = 0;
+    }
+  else if (player->player == 2)
+    {
+      player->pos_x = game->conf->size - 1;
+      player->pos_y = 0;
+    }
+  else if (player->player == 3)
+    {
+      player->pos_x = 0;
+      player->pos_y = game->conf->size - 1;
+    }
+  else if (player->player == 4)
+    {
+      player->pos_x = game->conf->size - 1;
+      player->pos_y = game->conf->size - 1;
+    }
 }
 
 int createPlayer(char *data, t_game *game)
@@ -63,10 +98,12 @@ int createPlayer(char *data, t_game *game)
     }
   player->id = data;
   player->energy = 50;
-  player->pos_x = getPos(game, "x");
-  player->pos_y = getPos(game, "y");
   player->ap = 1;
-  if (player->pos_x == 0)
+  for (i=0; game->players[i].id != NULL; i++);
+  game->players[i] = *player;
+  player->player = i + 1;
+  getPos(game, player);
+  if (player->pos_y == 0)
     {
       player->orientation = 0;
     }
@@ -74,8 +111,8 @@ int createPlayer(char *data, t_game *game)
     {
       player->orientation = 2;
     }
-  for (i=0; strcmp(game->players[i].id, "\0") != 0;i++);
-  game->players[2] = *player;
+  showInfoUser(player);
+
   return (1);
 }
 
@@ -87,7 +124,7 @@ int identify(char *data, t_game *game)
     {
       return (0);
     }
-  for (i=0; strcmp(game->players[i].id, "\0") != 0;i++)
+  for (i=0; game->players[i].id != NULL; i++)
     {
       if (strcmp(data, game->players[i].id) == 0)
 	{
@@ -98,6 +135,5 @@ int identify(char *data, t_game *game)
     {
       return (3); // ko|game full
     }
-
   return (createPlayer(data, game));
 }

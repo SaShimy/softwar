@@ -33,7 +33,7 @@ typedef struct  s_player
 
 typedef struct  s_game
 {
-  t_conf conf;
+  t_conf *conf;
   t_player players[4];
 }               t_game;
 
