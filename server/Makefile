@@ -1,9 +1,11 @@
 CC	=	gcc
 NAME	=	server
-SRC	=	server.c	\
-		set_options.c	\
-		check_options.c	\
-		commands1.c
+SRC	=	server.c		\
+		set_options.c		\
+		check_options.c		\
+		commands1.c		\
+		rep_req_server.c	\
+		map.c
 OBJ	=	$(SRC:%.c=%.o)
 RM	=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
