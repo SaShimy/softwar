@@ -29,6 +29,7 @@ typedef struct  s_player
   int pos_y;
   int ap;
   int orientation;// 0 up 1 right 2 bottom 3 left
+  int player;
 }               t_player;
 
 typedef struct  s_game

@@ -5,7 +5,8 @@ SRC	=	server.c		\
 		check_options.c		\
 		commands1.c		\
 		rep_req_server.c	\
-		map.c
+		map.c			\
+		movements.c
 OBJ	=	$(SRC:%.c=%.o)
 RM	=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
