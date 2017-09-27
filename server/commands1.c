@@ -105,11 +105,11 @@ int createPlayer(char *data, t_game *game)
   getPos(game, player);
   if (player->pos_y == 0)
     {
-      player->orientation = 0;
+      player->orientation = 3;
     }
   else
     {
-      player->orientation = 2;
+      player->orientation = 1;
     }
   showInfoUser(player);
 

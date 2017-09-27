@@ -28,14 +28,23 @@ typedef struct  s_player
   int pos_x;
   int pos_y;
   int ap;
-  int orientation;// 0 up 1 right 2 bottom 3 left
+  int orientation;// 0 left 1 up 2 right 3 bottom
   int player;
 }               t_player;
+
+typedef struct s_cell
+{
+  int x;
+  int y;
+  int value; // energie cellule
+}		t_cell;
 
 typedef struct  s_game
 {
   t_conf *conf;
   t_player players[4];
+  t_cell *cells;
+  int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
 /*
