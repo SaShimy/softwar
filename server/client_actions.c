@@ -1,3 +1,5 @@
+#include "server.h"
+
 int leftfwd(t_player *player, int max)
 {
   if (player->ap < 1)

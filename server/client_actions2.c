@@ -1,3 +1,4 @@
+#include "server.h"
 //gather
 //watch
 //attack
