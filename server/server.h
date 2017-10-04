@@ -74,5 +74,14 @@ char **init_map(int size);
 ** User ingame function
 */
 int identify(char *data, t_game *game);
+int leftfwd(t_player *player, int max);
+int rightfwd(t_player *player, int max);
+int forward(t_player *player, int max);
+int backward(t_player *player, int max);
+int right(t_player *player, int max);
+int left(t_player *player, int max);
+int looking(t_player *player);
+int selfid(t_player *player);
+int selfstats(t_player* player);
 
 #endif

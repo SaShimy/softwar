@@ -1,8 +1,33 @@
 #include "server.h"
 
-int move_forward(t_player *player, int max)
+int jump(t_player *player, int max)
 {
-  if (player->energy < 0.5)
+  if (player->energy < 2)
+    {
+      return (1);//pas assez d'energie
+    }
+  if ((player->orientation == 1 && player->pos_y - 2 < 0) ||
+      (player->orientation == 3 && player->pos_y + 2 > max) ||
+      (player->orientation == 0 && player->pos_x - 2 < 0) ||
+      (player->orientation == 2 && player->pos_x + 2 > max))
+    {
+      return (2);//ne peut pas avancer
+    }
+  if (player->orientation % 2 == 0)
+    {
+      player->pos_x += player->orientation == 0 ? -2 : 2;
+    }
+  else
+    {
+      player->pos_y += player->orientation == 1 ? -2 : 2;
+    }
+
+  return (0);
+}
+
+int forward(t_player *player, int max)
+{
+  if (player->ap < 0.5)
     {
       return (1);//pas assez d'energie
     }
@@ -25,9 +50,9 @@ int move_forward(t_player *player, int max)
   return (0);
 }
 
-int move_backward(t_player *player, int max)
+int backward(t_player *player, int max)
 {
-  if (player->energy < 1)
+  if (player->ap < 1)
     {
       return (1);//pas assez d'energie
     }
@@ -50,9 +75,9 @@ int move_backward(t_player *player, int max)
   return (0);
 }
 
-int turn_left(t_player *player, int max)
+int left(t_player *player, int max)
 {
-  if (player->energy < 0.5)
+  if (player->ap < 0.5)
     {
       return (1);
     }
@@ -65,9 +90,9 @@ int turn_left(t_player *player, int max)
   return (0);
 }
 
-int turn_right(t_player *player, int max)
+int right(t_player *player, int max)
 {
-  if (player->energy < 0.5)
+  if (player->ap < 0.5)
     {
       return (1);
     }
