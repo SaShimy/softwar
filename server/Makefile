@@ -6,7 +6,7 @@ SRC	=	server.c		\
 		commands1.c		\
 		rep_req_server.c	\
 		map.c			\
-		movements.c
+		client_movements.c
 OBJ	=	$(SRC:%.c=%.o)
 RM	=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
