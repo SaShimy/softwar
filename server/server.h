@@ -55,7 +55,8 @@ int set_rep_port(t_conf *conf, char *value);
 int set_pub_port(t_conf *conf, char *value);
 int set_cycle(t_conf *conf, char *value);
 int set_logs(t_conf *conf, char *value);
-
+int set_default_conf(t_conf *conf);
+  
 /*
 ** Check options validity
 */
@@ -68,5 +69,10 @@ int check_log_file(char *path);
 ** Map function
 */
 char **init_map(int size);
+
+/*
+** User ingame function
+*/
+int identify(char *data, t_game *game);
 
 #endif

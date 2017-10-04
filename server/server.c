@@ -67,13 +67,13 @@ int main(int argc, char **argv)
   //   printf("%d\n", strlen(map[i]));
   // }
   // listen_rep(conf);
-  printf("player 1 :\n");
+  /*  printf("player 1 :\n");
   identify("#0x01", game);
   printf("player 2 :\n");
   identify("#0x02", game);
   printf("player 3 :\n");
   identify("#0x03", game);
   printf("player 4 :\n");
-  identify("#0x04", game);
+  identify("#0x04", game);*/
   return (0);
 }
