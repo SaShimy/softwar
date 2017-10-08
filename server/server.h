@@ -1,9 +1,10 @@
 #ifndef SERVER_H
-# define SERVER_H
+#define SERVER_H
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <czmq.h>
+#include <pthread.h>
 
 typedef struct  s_conf
 {
@@ -11,8 +12,8 @@ typedef struct  s_conf
   int   size;
   char  *log_file_path;
   int   cycle;
-  char  *rep_port;
-  char  *pub_port;
+  int  rep_port;
+  int  pub_port;
 }               t_conf;
 
 typedef struct  s_func
@@ -56,7 +57,7 @@ int set_pub_port(t_conf *conf, char *value);
 int set_cycle(t_conf *conf, char *value);
 int set_logs(t_conf *conf, char *value);
 int set_default_conf(t_conf *conf);
-  
+
 /*
 ** Check options validity
 */
@@ -83,5 +84,13 @@ int left(t_player *player, int max);
 int looking(t_player *player);
 int selfid(t_player *player);
 int selfstats(t_player* player);
+
+int listen_rep(t_conf conf);
+int server_send_msg(char *target, char *message, zsock_t *router);
+int server_rcv_msg(zmsg_t *message);
+
+int listen_pub(t_conf conf);
+
+int identify(char *data, t_game *game);
 
 #endif

@@ -10,14 +10,14 @@ int set_size(t_conf *conf, char *value)
 int set_rep_port(t_conf *conf, char *value)
 {
   if (check_port("rep-port", value) == 0)
-    conf->rep_port = value;
+    conf->rep_port = atoi(value);
   return (0);
 }
 
 int set_pub_port(t_conf *conf, char *value)
 {
   if (check_port("pub-port", value) == 0)
-    conf->pub_port = value;
+    conf->pub_port = atoi(value);
   return (0);
 }
 
@@ -41,7 +41,7 @@ int set_default_conf(t_conf *conf)
   conf->size = 5;
   conf->cycle = 10000;
   conf->log_file_path = "./logs.txt";
-  conf->rep_port = "4242";
-  conf->pub_port = "4243";
+  conf->rep_port = 4242;
+  conf->pub_port = 4243;
   return (0);
 }

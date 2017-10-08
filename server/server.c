@@ -51,16 +51,16 @@ int main(int argc, char **argv)
   game = init_game(&conf);
   set_default_conf(&conf);
   get_options(&conf, argc, argv);
-  printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %s\n-Pub-port: %s\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
+  printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %d\n-Pub-port: %d\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
   map = init_map(conf.size);
-  for (i = 0; i < conf.size; i++)
-  {
-    for (j = 0; j < conf.size; j++)
-    {
-      printf("%c", map[i][j]);
-    }
-    printf("\n");
-  }
+//  for (i = 0; i < conf.size; i++)
+//  {
+//    for (j = 0; j < conf.size; j++)
+//    {
+//      printf("%c", map[i][j]);
+//    }
+//    printf("\n");
+//  }
 
   free(map);
   // for (i = 0; i < conf.size; i++) {

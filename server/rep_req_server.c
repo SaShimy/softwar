@@ -29,7 +29,7 @@ int server_rcv_msg(zmsg_t *message) {
 
 int listen_rep(t_conf conf) {
   zsock_t *router = zsock_new(ZMQ_ROUTER);
-  zsock_bind(router, "tcp://*:%s", conf.rep_port);
+  zsock_bind(router, "tcp://*:%d", conf.rep_port);
 
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);
