@@ -1,4 +1,4 @@
 server/server
 client/client
 server/*.o
-client/*.o
+client/node_modules
