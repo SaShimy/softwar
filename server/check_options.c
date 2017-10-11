@@ -4,7 +4,7 @@ int check_port(char *name, char *port)
 {
   if (strlen(port) > 5 || atoi(port) > 65535 || atoi(port) < 1)
   {
-    printf("%s isn't a vadid port number for %s.\nDefault value set instead.\n", port, name);
+    printf("%s isn't a valid port number for %s.\nDefault value set instead.\n", port, name);
     return (1);
   }
   return (0);
