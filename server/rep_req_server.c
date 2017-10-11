@@ -9,7 +9,7 @@ t_actions actions[9] = {
   {"left", left},
   {"looking", looking},
   {"selfid", selfid},
-  {"selfstats", selfstats}
+  {"selfstats", selfstats},
 };
 
 int server_send_msg(char *target, char *message, zsock_t *router) {

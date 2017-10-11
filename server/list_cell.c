@@ -5,7 +5,7 @@ int is_player(t_player player[4], int x, int y)
   int i;
   for(i = 0; i < 4; i++)
     {
-      if (player->pos_x == x && player->pos_y == y)
+      if (player[i].pos_x == x && player[i].pos_y == y)
 	{
 	  return (1);
 	}
@@ -38,12 +38,13 @@ int	generer_rand(int min, int max)
   return (rand()%(max-min+1) + min);
 }
 
-t_case *get_fill(t_game *game)
+t_container_case *get_fill(t_game *game)
 {
   int i;
   int j;
   int length;
   t_case *tab_case;
+  t_container_case *container;
 
   for (i = 0; i < game->conf->size; i++)
     {
@@ -64,18 +65,21 @@ t_case *get_fill(t_game *game)
 	    length++;
 	  }
     }
-  return (tab_case);
+  container->length = length;
+  container->tab_case = tab_case;
+  return (container);
 }
 		
 
-t_case *get_empty(t_game *game)
+t_container_case *get_empty(t_game *game)
 {
   int i;
   int j;
   int length;
   t_case *tab_case;
+  t_container_case *container;
   
-  for (i = 0; i < game->conf->size; i++)
+  for (i = 0, length = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
 	if (!is_player(game->players, i, j) && !is_cell(game->container, i, j))
@@ -94,7 +98,9 @@ t_case *get_empty(t_game *game)
 	   length++;
 	 }
    }
-  return (tab_case);
+  container->length = length;
+  container->tab_case = tab_case;
+  return (container);
 }
 void    add_cell_to_container(t_container *container, t_cell *cell) {
   if (container && cell)
@@ -118,23 +124,24 @@ void    add_cell_to_container(t_container *container, t_cell *cell) {
 
 int	create_cell_condition(t_game *game, int size, t_cell *cell)
 {
-  int x;
   int y;
   int length;
   int rand;
+  t_container_case *container;
   t_case *tab_case;
-
- tab_case = get_empty(game);
- length = sizeof(tab_case);
- if(length == 0)
-   {
-     return (1); //no more place
-   }
- rand = generer_rand(0, length);
- cell->x = tab_case[rand].x;
- cell->y = tab_case[rand].y;
- add_cell_to_container(game->container, cell);
- return (0);
+  
+  container = get_empty(game);
+  tab_case = container->tab_case;
+  length = container->length;
+  if(length == 0)
+    {
+      return (1); //no more place
+    }
+  rand = generer_rand(0, length);
+  cell->x = tab_case[rand].x;
+  cell->y = tab_case[rand].y;
+  add_cell_to_container(game->container, cell);
+  return (0);
 }
 
 int	create_cell(t_game *game)
