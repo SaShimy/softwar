@@ -8,7 +8,8 @@ SRC	=	server.c		\
 		map.c			\
 		client_movements.c	\
 		client_actions.c	\
-		client_actions2.c	
+		client_actions2.c	\
+		list_cell.c
 OBJ	=	$(SRC:%.c=%.o)
 RM	=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
