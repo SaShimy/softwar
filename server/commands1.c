@@ -14,50 +14,20 @@ int isValid(char *data)
   
   if (strlen(data) != 5)
     {
-      return (0);
+      return (1);//mvse longueur
     }
 
   strncpy(str, data, 3);
   str[3] = '\0';
   if (strcmp(str, "#0x") != 0)
     {
-      return (0);
+      return (2);//le debut n'est pas conforme
     }
   if (!isdigit(data[3]) || !isdigit(data[4]))
     {
-      return (0);
+      return (3);//nb 3/4 n'est pas un nb
     }
-    return (1);
-}
-
-int getPosX(t_game *game)//, char *pos)
-{
-  int i;
-  int count;
-  
-  for (i=0; game->players[i].id != NULL; i++)
-    {
-      /*if (strcmp(pos, "x") == 0)
-	{*/	
-	  if (game->players[i].pos_x == 0)
-	    {
-	      count++;
-	    }
-	  //}
-      /*      if (strcmp(pos, "y") == 0)
-	{
-	  if ((game->players[i].pos_x == 0 && game->players[i].pos_y == 0) ||
-	      (game->players[i].pos_y == 0 && game->players[i].pos_x == game->conf->size - 1))
-	    {
-	      count++;
-	    }
-	    }*/
-    }
-  if (count == 2)
-    {
-      return (game->conf->size - 1);
-    }
-  return (0);
+    return (0);
 }
 
 int getPos(t_game *game, t_player *player)
@@ -94,7 +64,7 @@ int createPlayer(char *data, t_game *game)
   player = malloc(sizeof(*player));
   if (!player)
     {
-      return (4);
+      return (1);//err malloc
     }
   player->id = data;
   player->energy = 50;
@@ -105,15 +75,15 @@ int createPlayer(char *data, t_game *game)
   getPos(game, player);
   if (player->pos_y == 0)
     {
-      player->orientation = 0;
+      player->orientation = 3;
     }
   else
     {
-      player->orientation = 2;
+      player->orientation = 1;
     }
   showInfoUser(player);
 
-  return (1);
+  return (0);
 }
 
 int identify(char *data, t_game *game)
@@ -122,18 +92,18 @@ int identify(char *data, t_game *game)
 
   if (isValid(data) == 0)
     {
-      return (0);
+      return (2);//le data est invalide
     }
   for (i=0; game->players[i].id != NULL; i++)
     {
       if (strcmp(data, game->players[i].id) == 0)
 	{
-	  return (2);// ko|identity already exist
+	  return (3);// ko|identity already exist
 	}
     }
   if (i == 4)
     {
-      return (3); // ko|game full
+      return (4); // ko|game full
     }
   return (createPlayer(data, game));
 }
