@@ -2,7 +2,7 @@
 
 int server_send_msg(char *target, char *message, zsock_t *router) {
   zmsg_t   *response = zmsg_new();
-  zframe_t *identity = zframe_new(target, strlen(message));
+  zframe_t *identity = zframe_new(target, strlen(target));
   zframe_t *empty = zframe_new("", 0);
   zframe_t *content = zframe_new(message, strlen(message));
 
@@ -18,12 +18,15 @@ int server_send_msg(char *target, char *message, zsock_t *router) {
 }
 
 int server_rcv_msg(zmsg_t *message) {
-  zframe_t *identity = zmsg_pop(message);
-  zframe_t *empty = zmsg_pop(message);
-  zframe_t *content = zmsg_pop(message);
+  char *identity = zmsg_popstr(message);
+  char *empty = zmsg_popstr(message);
+  char *content = zmsg_popstr(message);
 
   zmsg_destroy(&message);
-  printf("Content of message is : %s\n", zframe_strdup(content));
+  printf("Content of message is : %s\n", content);
+  printf("Empty is : %s\n", empty);
+  // printf("Identity is %02x\n", identity);
+  printf("Identity is : %s\n", identity);
   return (0);
 }
 
@@ -34,7 +37,7 @@ int listen_rep(t_conf conf) {
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);
     server_rcv_msg(message);
-    //server_send_msg(message, router);
+    // server_send_msg(message, router);
   }
   zsock_destroy(&router);
   return (0);

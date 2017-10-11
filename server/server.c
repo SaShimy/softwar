@@ -42,7 +42,6 @@ t_game *init_game(t_conf *conf)
 
 int main(int argc, char **argv)
 {
-  char **map;
   int i;
   int j;
   t_game *game;
@@ -52,28 +51,17 @@ int main(int argc, char **argv)
   set_default_conf(&conf);
   get_options(&conf, argc, argv);
   printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %s\n-Pub-port: %s\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
-  map = init_map(conf.size);
-  for (i = 0; i < conf.size; i++)
-  {
-    for (j = 0; j < conf.size; j++)
-    {
-      printf("%c", map[i][j]);
-    }
-    printf("\n");
-  }
-
-  free(map);
   // for (i = 0; i < conf.size; i++) {
   //   printf("%d\n", strlen(map[i]));
   // }
-  // listen_rep(conf);
-  printf("player 1 :\n");
-  identify("#0x01", game);
-  printf("player 2 :\n");
-  identify("#0x02", game);
-  printf("player 3 :\n");
-  identify("#0x03", game);
-  printf("player 4 :\n");
-  identify("#0x04", game);
+  listen_rep(conf);
+  // printf("player 1 :\n");
+  // identify("#0x01", game);
+  // printf("player 2 :\n");
+  // identify("#0x02", game);
+  // printf("player 3 :\n");
+  // identify("#0x03", game);
+  // printf("player 4 :\n");
+  // identify("#0x04", game);
   return (0);
 }
