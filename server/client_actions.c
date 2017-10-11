@@ -58,19 +58,19 @@ int rightfwd(t_player *player, int max)
   return (0);
 }
 
-int looking(t_player *player)
+int looking(t_player *player, int max)
 {
   printf("Orientation: %d\n", player->orientation);
   return (0);
 }
 
-int selfid(t_player *player)
+int selfid(t_player *player, int max)
 {
   printf("Identifiant: %s\n", player->id);
   return (0);
 }
 
-int selfstats(t_player* player)
+int selfstats(t_player* player, int max)
 {
   printf("Energie: %d\n", player->energy);
   return (0);

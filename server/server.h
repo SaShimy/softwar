@@ -48,6 +48,13 @@ typedef struct  s_game
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
+typedef struct s_actions
+{
+  char *name;
+  int (*func) (t_player* player, int max);
+}               t_actions;
+
+
 /*
 ** Set configuration structure
 */
@@ -67,11 +74,6 @@ int check_cycle(char *cycle);
 int check_log_file(char *path);
 
 /*
-** Map function
-*/
-char **init_map(int size);
-
-/*
 ** User ingame function
 */
 int identify(char *data, t_game *game);
@@ -81,13 +83,13 @@ int forward(t_player *player, int max);
 int backward(t_player *player, int max);
 int right(t_player *player, int max);
 int left(t_player *player, int max);
-int looking(t_player *player);
-int selfid(t_player *player);
-int selfstats(t_player* player);
+int looking(t_player *player, int max);
+int selfid(t_player *player, int max);
+int selfstats(t_player* player, int max);
 
-int listen_rep(t_conf conf);
+int listen_rep(t_conf conf, t_game *game);
 int server_send_msg(char *target, char *message, zsock_t *router);
-int server_rcv_msg(zmsg_t *message);
+int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router);
 
 int listen_pub(t_conf conf);
 

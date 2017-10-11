@@ -70,7 +70,6 @@ int createPlayer(char *data, t_game *game)
   player->energy = 50;
   player->ap = 1;
   for (i=0; game->players[i].id != NULL; i++);
-  game->players[i] = *player;
   player->player = i + 1;
   getPos(game, player);
   if (player->pos_y == 0)
@@ -81,7 +80,8 @@ int createPlayer(char *data, t_game *game)
     {
       player->orientation = 1;
     }
-  showInfoUser(player);
+    game->players[i] = *player;
+    showInfoUser(player);
 
   return (0);
 }
@@ -90,7 +90,7 @@ int identify(char *data, t_game *game)
 {
   int i;
 
-  if (isValid(data) == 0)
+  if (isValid(data) != 0)
     {
       return (2);//le data est invalide
     }
