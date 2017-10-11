@@ -112,4 +112,5 @@ int listen_pub(t_conf conf);
 
 int identify(char *data, t_game *game);
 
+void showInfoUser(t_player *player);
 #endif

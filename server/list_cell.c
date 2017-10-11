@@ -24,7 +24,7 @@ int is_cell(t_container *container, int x, int y)
   tmp = container->first;
   while (tmp != NULL)
     {
-      if (tmp->pos_x == x && tmp->pos_y == y)
+      if (tmp->x == x && tmp->y == y)
 	{
 	  return (1);
 	}
@@ -48,7 +48,7 @@ t_case *get_fill(t_game *game)
   for (i = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (is_player(game->player, i, j) || is_cell())
+	if (is_player(game->players, i, j) || is_cell(game->container, i, j))
 	  {
 	    length++;
 	  }
@@ -57,10 +57,10 @@ t_case *get_fill(t_game *game)
   for (i = 0, length = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (is_player(game->player, i, j) || is_cell())
+	if (is_player(game->players, i, j) || is_cell(game->container, i, j))
 	  {
-	    tab_case[length]->x = i;
-	    tab_case[length]->y = j;
+	    tab_case[length].x = i;
+	    tab_case[length].y = j;
 	    length++;
 	  }
     }
@@ -78,7 +78,7 @@ t_case *get_empty(t_game *game)
   for (i = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (!is_player(game->player, i, j) && !is_cell())
+	if (!is_player(game->players, i, j) && !is_cell(game->container, i, j))
 	  {
 	    length++;
 	  }
@@ -87,14 +87,33 @@ t_case *get_empty(t_game *game)
   for (i = 0, length = 0; i < game->conf->size; i++)
    {
      for (j = 0; j < game->conf->size; j++)
-       if (!is_player(game->player, i, j) && !is_cell())
+       if (!is_player(game->players, i, j) && !is_cell(game->container, i, j))
 	 {
-	   tab_case[length]->x = i;
-	   tab_case[length]->y = j;
+	   tab_case[length].x = i;
+	   tab_case[length].y = j;
 	   length++;
 	 }
    }
   return (tab_case);
+}
+void    add_cell_to_container(t_container *container, t_cell *cell) {
+  if (container && cell)
+    {
+      if (container->nb_elem > 0)
+	{
+	  container->last->next = cell;
+	  cell->prev = container->last;
+	  container->last = cell;
+	}
+    else
+      {
+	container->first = cell;
+	container->last = cell;
+	cell->prev = NULL;
+      }
+      cell->next = NULL;
+      container->nb_elem += 1;
+    }
 }
 
 int	create_cell_condition(t_game *game, int size, t_cell *cell)
@@ -103,14 +122,19 @@ int	create_cell_condition(t_game *game, int size, t_cell *cell)
   int y;
   int length;
   int rand;
-  t_case *case;
+  t_case *tab_case;
 
- case = get_empty(game);
- length = sizeof(case);
+ tab_case = get_empty(game);
+ length = sizeof(tab_case);
+ if(length == 0)
+   {
+     return (1); //no more place
+   }
  rand = generer_rand(0, length);
- cell->pos_x = case[rand]->x;
- cell->pos_y = case[rand]->y;
- add_cell_to_container(&game->container, &cell);
+ cell->x = tab_case[rand].x;
+ cell->y = tab_case[rand].y;
+ add_cell_to_container(game->container, cell);
+ return (0);
 }
 
 int	create_cell(t_game *game)
@@ -124,8 +148,8 @@ int	create_cell(t_game *game)
       return (1);
     }
   energy = generer_rand(5,15);
-  cell->energy = energy;
-  return (create_cell_condition(game, game->conf->size, &cell));
+  cell->value = energy;
+  return (create_cell_condition(game, game->conf->size, cell));
 }
 
 void	del_cd(t_container *container, t_cell *cell_prev, t_cell *cell_next)
@@ -170,25 +194,5 @@ void	del_cell_from_container(t_game *game, t_cell *cell)
       del_cd(game->container, cell_prev, cell_next);
       free(cell);
       game->container->nb_elem -= 1;
-    }
-}
-
-void	add_cell_to_container(t_container *container, t_cell *cell) {
-  if (container && cell)
-    {
-      if (container->nb_elem > 0)
-	{
-	  container->last->next = cell;
-	  cell->prev = container->last;
-	  container->last = cell;
-	}
-      else
-	{
-	  container->first = cell;
-	  container->last = cell;
-	  cell->prev = NULL;
-	}
-      cell->next = NULL;
-      container->nb_elem += 1;
     }
 }
