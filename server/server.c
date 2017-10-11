@@ -42,7 +42,7 @@ t_game *init_game(t_conf *conf)
   container->last = NULL;
   container->nb_elem = 0;
   game->container = container;
-  
+
   return (game);
 }
 
@@ -61,14 +61,51 @@ int main(int argc, char **argv)
   //   printf("%d\n", strlen(map[i]));
   // }
   
-  identify("#0x01", game);
+  /* identify("#0x01", game);
   identify("#0x02", game);
   identify("#0x03", game);
   identify("#0x04", game);
-  // create_cell(game);
-  //printf("x: %d\n", game->container->first->x);
-  //printf("y: %d\n", game->container->first->y);
-  //game->game_status = 1;
-  //listen_rep(conf, game);
+   create_cell(game);
+  printf("x: %d\n", game->container->first->x);
+  printf("y: %d\n", game->container->first->y);
+  game->game_status = 1;
+  listen_rep(conf, game);
+  */ //test david
+  
+  // THREAD / PUB test aure
+    t_thread *thread;
+    pthread_t t;
+    int ret;
+  thread = init_thread(game, &conf);
+
+  ret = pthread_create (&t,NULL,exec_pub, thread);
+
+    if (!ret)
+    {
+        fprintf (stderr, "%s\n", strerror (ret));
+    }
+    else {
+        fprintf (stderr, "%s\n", strerror (ret));
+    }
+    pthread_join (t, NULL);
+  zsock_destroy(&thread->publisher);
+
+  // END THREAD / PUB
+
+//   listen_pub(conf, publisher);
+
+//   while(publisher.status == 0) {
+//        printf(".");
+//        usleep(3000);
+//   }
+  // printf("player 1 :\n");
+  // identify("#0x01", game);
+  // printf("player 2 :\n");
+//  identify("#0x01", game);
+  // identify("#0x02", game);
+  // identify("#0x03", game);
+  // identify("#0x04", game);
+//  game->game_status = 1;
+//  listen_rep(conf, game);
   return (0);
 }

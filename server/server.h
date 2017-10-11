@@ -77,6 +77,19 @@ typedef struct  s_game
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
+typedef struct s_publisher
+{
+    zsock_t	    *pub;
+    pthread_t   thread;
+}       t_publisher;
+
+typedef struct s_thread
+{
+    t_game          *game;
+    zsock_t         *publisher;
+
+}               t_thread;
+
 typedef struct s_actions
 {
   char *name;
@@ -121,8 +134,6 @@ int listen_rep(t_conf conf, t_game *game);
 int server_send_msg(char *target, char *message, zsock_t *router);
 int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router);
 
-int listen_pub(t_conf conf);
-
 void showInfoUser(t_player *player);
 
 /*
@@ -130,4 +141,12 @@ void showInfoUser(t_player *player);
 */
 int     create_cell(t_game *game);
 void    del_cell_from_container(t_game *game, t_cell *cell);
+
+/*
+** THREAD / PUB
+*/
+zsock_t		*init_pub(t_conf *conf);
+void *exec_pub(void *arg);
+t_thread	*init_thread(t_game *game, t_conf *conf);
+
 #endif

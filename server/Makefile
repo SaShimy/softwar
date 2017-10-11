@@ -5,7 +5,7 @@ SRC	=	server.c		\
 		check_options.c		\
 		commands1.c		\
 		rep_req_server.c	\
-		pub_sub_server.c	\
+		pub.c	\
 		client_movements.c	\
 		client_actions.c	\
 		client_actions2.c	\
