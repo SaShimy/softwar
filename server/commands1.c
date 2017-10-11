@@ -86,24 +86,30 @@ int createPlayer(char *data, t_game *game)
   return (0);
 }
 
-int identify(char *data, t_game *game)
+t_return identify(char *data, t_game *game)
 {
   int i;
+  t_return ret;
 
+  ret.data = "null";
   if (isValid(data) != 0)
     {
-      return (2);//le data est invalide
+      ret.code = 2;
+      return (ret);//le data est invalide
     }
   for (i=0; game->players[i].id != NULL; i++)
     {
       if (strcmp(data, game->players[i].id) == 0)
 	{
-	  return (3);// ko|identity already exist
+	  ret.code = 3;
+	  return (ret);// ko|identity already exist
 	}
     }
   if (i == 4)
     {
-      return (4); // ko|game full
+      ret.code = 4;
+      return (ret); // ko|game full
     }
-  return (createPlayer(data, game));
+  ret.code = createPlayer(data,game);
+  return (ret);
 }

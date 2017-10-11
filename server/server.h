@@ -8,6 +8,12 @@
 #include <time.h>
 #include <pthread.h>
 
+typedef struct s_return
+{
+  int code;
+  char *data;
+}		t_return;
+
 typedef struct  s_conf
 {
   bool  verbose;
@@ -93,7 +99,7 @@ int check_log_file(char *path);
 /*
 ** User ingame function
 */
-int identify(char *data, t_game *game);
+t_return identify(char *data, t_game *game);
 int leftfwd(t_player *player, int max);
 int rightfwd(t_player *player, int max);
 int forward(t_player *player, int max);
@@ -109,8 +115,6 @@ int server_send_msg(char *target, char *message, zsock_t *router);
 int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router);
 
 int listen_pub(t_conf conf);
-
-int identify(char *data, t_game *game);
 
 void showInfoUser(t_player *player);
 #endif
