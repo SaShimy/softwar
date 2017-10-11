@@ -49,7 +49,7 @@ int main(int argc, char **argv)
   t_conf conf;
   game = init_game(&conf);
   set_default_conf(&conf);
-  printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %s\n-Pub-port: %s\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
+  printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %d\n-Pub-port: %d\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
   // for (i = 0; i < conf.size; i++) {
   //   printf("%d\n", strlen(map[i]));
   // }
