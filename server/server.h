@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <czmq.h>
+#include <unistd.h>
+#include <time.h>
 
 typedef struct  s_conf
 {
@@ -21,6 +23,12 @@ typedef struct  s_func
   int   (*func) (t_conf *conf, char *value);
 }               t_func;
 
+typedef struct s_case
+{
+  int x;
+  int y;
+}		t_case;
+
 typedef struct  s_player
 {
   char *id;
@@ -37,13 +45,22 @@ typedef struct s_cell
   int x;
   int y;
   int value; // energie cellule
+  struct s_cell *next;
+  struct s_cell *prev;
 }		t_cell;
+
+typedef struct s_container
+{
+  t_cell *first;
+  t_cell *last;
+  int nb_elem;
+}		t_container;
 
 typedef struct  s_game
 {
   t_conf *conf;
   t_player players[4];
-  t_cell *cells;
+  t_container *container;
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 

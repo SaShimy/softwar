@@ -29,13 +29,19 @@ int get_options(t_conf *conf, int argc, char **argv) {
 t_game *init_game(t_conf *conf)
 {
   t_game *game;
+  t_container *container;
 
+  container = malloc(sizeof(*container));
   game = malloc(sizeof(*game));
-  if (!game)
+  if (!game || !container)
     {
       return (0);
     }
   game->conf = conf;
+  container->first = NULL;
+  container->last = NULL;
+  container->nb_elem = 0;
+  game->container = container;
   
   return (game);
 }
