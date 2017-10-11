@@ -1,11 +1,12 @@
 #ifndef SERVER_H
-# define SERVER_H
+#define SERVER_H
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <czmq.h>
 #include <unistd.h>
 #include <time.h>
+#include <pthread.h>
 
 typedef struct  s_conf
 {
@@ -13,8 +14,8 @@ typedef struct  s_conf
   int   size;
   char  *log_file_path;
   int   cycle;
-  char  *rep_port;
-  char  *pub_port;
+  int  rep_port;
+  int  pub_port;
 }               t_conf;
 
 typedef struct  s_func
@@ -64,6 +65,13 @@ typedef struct  s_game
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
+typedef struct s_actions
+{
+  char *name;
+  int (*func) (t_player* player, int max);
+}               t_actions;
+
+
 /*
 ** Set configuration structure
 */
@@ -73,7 +81,7 @@ int set_pub_port(t_conf *conf, char *value);
 int set_cycle(t_conf *conf, char *value);
 int set_logs(t_conf *conf, char *value);
 int set_default_conf(t_conf *conf);
-  
+
 /*
 ** Check options validity
 */
@@ -81,11 +89,6 @@ int check_port(char *name, char *port);
 int check_map_size(char *size);
 int check_cycle(char *cycle);
 int check_log_file(char *path);
-
-/*
-** Map function
-*/
-char **init_map(int size);
 
 /*
 ** User ingame function
@@ -97,8 +100,16 @@ int forward(t_player *player, int max);
 int backward(t_player *player, int max);
 int right(t_player *player, int max);
 int left(t_player *player, int max);
-int looking(t_player *player);
-int selfid(t_player *player);
-int selfstats(t_player* player);
+int looking(t_player *player, int max);
+int selfid(t_player *player, int max);
+int selfstats(t_player* player, int max);
+
+int listen_rep(t_conf conf, t_game *game);
+int server_send_msg(char *target, char *message, zsock_t *router);
+int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router);
+
+int listen_pub(t_conf conf);
+
+int identify(char *data, t_game *game);
 
 #endif

@@ -5,7 +5,7 @@ SRC	=	server.c		\
 		check_options.c		\
 		commands1.c		\
 		rep_req_server.c	\
-		map.c			\
+		pub_sub_server.c	\
 		client_movements.c	\
 		client_actions.c	\
 		client_actions2.c	\
@@ -13,7 +13,7 @@ SRC	=	server.c		\
 OBJ	=	$(SRC:%.c=%.o)
 RM	=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
-LIBS	=	-lczmq -lzmq
+LIBS	=	-lczmq -lzmq -lpthread -D_REENTRANT
 
 $(NAME):	$(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(LIBS)
