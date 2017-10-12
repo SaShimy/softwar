@@ -87,11 +87,9 @@ t_return looking(t_player *player, int max)
 t_return selfid(t_player *player, int max)
 {
   t_return ret;
-  char str[12];
-
-  snprintf(str, 12, "%d", player->id);
+  
   ret.code = 0;
-  ret.data = str;
+  ret.data = player->id;
   printf("Identifiant: %s\n", player->id);
   return (ret);
 }
