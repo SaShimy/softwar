@@ -81,6 +81,11 @@ int createPlayer(char *data, t_game *game)
       player->orientation = 1;
     }
     game->players[i] = *player;
+    game->players_length += 1;
+    printf("player created\n");
+    if (game->players_length == 4) {
+        game->game_status = 1;
+    }
     showInfoUser(player);
 
   return (0);

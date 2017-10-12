@@ -39,7 +39,7 @@ int set_default_conf(t_conf *conf)
 {
   conf->verbose = false;
   conf->size = 5;
-  conf->cycle = 10000;
+  conf->cycle = 2000000;
   conf->log_file_path = "./logs.txt";
   conf->rep_port = 4242;
   conf->pub_port = 4243;

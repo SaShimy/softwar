@@ -36,6 +36,8 @@ t_game init_game(t_conf *conf)
   container.last = NULL;
   container.nb_elem = 0;
   game.container = container;
+  game.game_status = 0;
+  game.players_length = 0;
 
   return (game);
 }
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
   game->game_status = 1;
   listen_rep(conf, game);
   */ //test david
-  
+
   // THREAD / PUB test aure
 //    init_pub_thread(game, &conf);
     test(&game, &conf);
