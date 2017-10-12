@@ -2,6 +2,7 @@
 #define SERVER_H
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <czmq.h>
 #include <unistd.h>
@@ -93,7 +94,7 @@ typedef struct s_thread
 typedef struct s_actions
 {
   char *name;
-  t_return (*func) (t_player* player, int max, char *data);
+  t_return (*func) (t_player* player, int max, char *data, t_game *game);
 }               t_actions;
 
 
@@ -119,16 +120,16 @@ int check_log_file(char *path);
 ** User ingame function
 */
 t_return identify(char *data, t_game *game);
-t_return leftfwd(t_player *player, int max, char *data);
-t_return rightfwd(t_player *player, int max, char *data);
-t_return forward(t_player *player, int max, char *data);
-t_return backward(t_player *player, int max, char *data);
-t_return right(t_player *player, int max, char *data);
-t_return left(t_player *player, int max, char *data);
-t_return looking(t_player *player, int max, char *data);
-t_return selfid(t_player *player, int max, char *data);
-t_return selfstats(t_player* player, int max, char *data);
-t_return jump(t_player *player, int max, char *data);
+t_return leftfwd(t_player *player, int max, char *data, t_game *game);
+t_return rightfwd(t_player *player, int max, char *data, t_game *game);
+t_return forward(t_player *player, int max, char *data, t_game *game);
+t_return backward(t_player *player, int max, char *data, t_game *game);
+t_return right(t_player *player, int max, char *data, t_game *game);
+t_return left(t_player *player, int max, char *data, t_game *game);
+t_return looking(t_player *player, int max, char *data, t_game *game);
+t_return selfid(t_player *player, int max, char *data, t_game *game);
+t_return selfstats(t_player* player, int max, char *data, t_game *game);
+t_return jump(t_player *player, int max, char *data, t_game *game);
 
 int listen_rep(t_conf *conf, t_game *game);
 int server_send_msg(char *target, char *message, zsock_t *router);
@@ -158,5 +159,6 @@ void init_pub_thread(t_game *game, t_conf *conf);
 */
 int is_player(t_player player[4], int x, int y);
 int is_cell(t_game *game, int x, int y);
+t_player *get_id_from_pos(t_player player[4], int x, int y);
 
 #endif

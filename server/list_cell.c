@@ -13,6 +13,23 @@ int is_player(t_player player[4], int x, int y)
   return (0);
 }
 
+t_player *get_id_from_pos(t_player player[4], int x, int y)
+{
+  int i;
+  t_player *playertmp;
+
+  playertmp = malloc(sizeof(t_player));
+  playertmp->id = "empty,";
+  for(i = 0; i < 4; i++)
+    {
+      if (player[i].pos_x == x && player[i].pos_y == y)
+	{
+	  return (&player[i]);
+	}
+    }
+  return (playertmp);
+}
+
 int is_cell(t_game *game, int x, int y)
 {
   t_cell *tmp;

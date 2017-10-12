@@ -69,7 +69,7 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
     {
       if (strcmp(action, actions[i].name) == 0)
       {
-        printf("Forward: %d\n", actions[i].func(current_player, game->conf->size, "test").code);
+        printf("Forward: %d\n", actions[i].func(current_player, game->conf->size, "test", game).code);
         done = true;
       }
     }

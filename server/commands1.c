@@ -80,8 +80,8 @@ int createPlayer(char *data, t_game *game)
     {
       player->orientation = 1;
     }
-    game->players[i] = *player;
-    showInfoUser(player);
+  game->players[i] = *player;
+  showInfoUser(player);
 
   return (0);
 }
