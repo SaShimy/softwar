@@ -19,10 +19,10 @@ void test (t_game *game, t_conf *conf) {
     ret = pthread_create (&t,NULL,exec_pub, pub);
     fprintf (stderr, "%s\n", strerror (ret));
 
-    pthread_join (t, NULL);
+    listen_rep(conf, game);
+//    pthread_join (t, NULL);
 
     zsock_destroy(&pub);
-
 }
 
 zsock_t		*init_pub(t_conf *conf)
@@ -66,6 +66,7 @@ void *test_exec_pub(void *arg)
         zstr_send(pub, "This is a test");
         zclock_sleep (1000);
     }
+    pthread_exit(NULL);
 }
 
 

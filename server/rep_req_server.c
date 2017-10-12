@@ -80,9 +80,9 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
   return (server_send_msg(identity, "ok|null", router));
 }
 
-int listen_rep(t_conf conf, t_game *game) {
+int listen_rep(t_conf *conf, t_game *game) {
   zsock_t *router = zsock_new(ZMQ_ROUTER);
-  zsock_bind(router, "tcp://*:%d", conf.rep_port);
+  zsock_bind(router, "tcp://*:%d", conf->rep_port);
 
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);

@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   // for (i = 0; i < conf.size; i++) {
   //   printf("%d\n", strlen(map[i]));
   // }
-  // listen_rep(conf, &game);
+//  listen_rep(conf, game);
   /* identify("#0x01", game);
   identify("#0x02", game);
   identify("#0x03", game);
@@ -67,8 +67,9 @@ int main(int argc, char **argv)
   */ //test david
   
   // THREAD / PUB test aure
-   init_pub_thread(&game, &conf);
-   test(&game, &conf);
+//    init_pub_thread(game, &conf);
+    test(&game, &conf);
+//    listen_rep(conf, game);
   // END THREAD / PUB
 
 //   listen_pub(conf, publisher);
