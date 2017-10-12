@@ -27,7 +27,7 @@ typedef struct  s_conf
 typedef struct  s_func
 {
   char  *name;
-  int   (*func) (t_conf *conf, char *value);
+  int   (*func) (t_conf *conf, char* value);
 }               t_func;
 
 typedef struct s_case
@@ -35,6 +35,12 @@ typedef struct s_case
   int x;
   int y;
 }		t_case;
+
+typedef struct s_container_case
+{
+  int length;
+  t_case *tab_case;
+}		t_container_case;
 
 typedef struct  s_player
 {
@@ -71,10 +77,23 @@ typedef struct  s_game
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
+typedef struct s_publisher
+{
+    zsock_t	    *pub;
+    pthread_t   thread;
+}       t_publisher;
+
+typedef struct s_thread
+{
+    t_game          *game;
+    zsock_t         *publisher;
+
+}               t_thread;
+
 typedef struct s_actions
 {
   char *name;
-  int (*func) (t_player* player, int max);
+  t_return (*func) (t_player* player, int max);
 }               t_actions;
 
 
@@ -100,21 +119,39 @@ int check_log_file(char *path);
 ** User ingame function
 */
 t_return identify(char *data, t_game *game);
-int leftfwd(t_player *player, int max);
-int rightfwd(t_player *player, int max);
-int forward(t_player *player, int max);
-int backward(t_player *player, int max);
-int right(t_player *player, int max);
-int left(t_player *player, int max);
-int looking(t_player *player, int max);
-int selfid(t_player *player, int max);
-int selfstats(t_player* player, int max);
+t_return leftfwd(t_player *player, int max);
+t_return rightfwd(t_player *player, int max);
+t_return forward(t_player *player, int max);
+t_return backward(t_player *player, int max);
+t_return right(t_player *player, int max);
+t_return left(t_player *player, int max);
+t_return looking(t_player *player, int max);
+t_return selfid(t_player *player, int max);
+t_return selfstats(t_player* player, int max);
+t_return jump(t_player *player, int max);
 
 int listen_rep(t_conf conf, t_game *game);
 int server_send_msg(char *target, char *message, zsock_t *router);
 int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router);
 
-int listen_pub(t_conf conf);
-
 void showInfoUser(t_player *player);
+
+/*
+** cell
+*/
+int     create_cell(t_game *game);
+void    del_cell_from_container(t_game *game, t_cell *cell);
+
+/*
+** THREAD / PUB
+*/
+zsock_t		*init_pub(t_conf *conf);
+void *exec_pub(void *arg);
+t_thread	*init_thread(t_game *game, t_conf *conf);
+
+void *test_exec_pub(void *arg);
+void test(t_game *game, t_conf *conf);
+void init_pub_thread(t_game *game, t_conf *conf);
+
+
 #endif

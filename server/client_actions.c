@@ -1,10 +1,14 @@
 #include "server.h"
 
-int leftfwd(t_player *player, int max)
+t_return leftfwd(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->ap < 1)
     {
-      return (1);
+      ret.code = 1;
+      return (ret);
     }
   player->orientation -= 1;
   if (player->orientation < 0)
@@ -16,7 +20,8 @@ int leftfwd(t_player *player, int max)
       (player->orientation == 0 && player->pos_x - 1 < 0) ||
       (player->orientation == 2 && player->pos_x + 1 > max))
     {
-      return (2);//ne peut pas avancer
+      ret.code = 2;
+      return (ret);//ne peut pas avancer
     }
   if (player->orientation % 2 == 0)
     {
@@ -26,14 +31,20 @@ int leftfwd(t_player *player, int max)
     {
       player->pos_y += player->orientation == 1 ? -1 : 1;
     }
-  return (0);
+  ret.code = 0;
+  player->ap -= 1;
+  return (ret);
 }
 
-int rightfwd(t_player *player, int max)
+t_return rightfwd(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->ap < 1)
     {
-      return (1);
+      ret.code = 1;
+      return (ret);
     }
   player->orientation += 1;
   if (player->orientation > 3)
@@ -45,7 +56,8 @@ int rightfwd(t_player *player, int max)
       (player->orientation == 0 && player->pos_x - 1 < 0) ||
       (player->orientation == 2 && player->pos_x + 1 > max))
     {
-      return (2);//ne peut pas avancer
+      ret.code = 2;
+      return (ret);//ne peut pas avancer
     }
   if (player->orientation % 2 == 0)
     {
@@ -55,23 +67,41 @@ int rightfwd(t_player *player, int max)
     {
       player->pos_y += player->orientation == 1 ? -1 : 1;
     }
-  return (0);
+  ret.code = 0;
+  player->ap -= 1;
+  return (ret);
 }
 
-int looking(t_player *player, int max)
+t_return looking(t_player *player, int max)
 {
+  t_return ret;
+  char str[12];
+
+  snprintf(str, 12, "%d", player->orientation);
+  ret.code = 0;
+  ret.data = str;
   printf("Orientation: %d\n", player->orientation);
-  return (0);
+  return (ret);
 }
 
-int selfid(t_player *player, int max)
+t_return selfid(t_player *player, int max)
 {
+  t_return ret;
+  
+  ret.code = 0;
+  ret.data = player->id;
   printf("Identifiant: %s\n", player->id);
-  return (0);
+  return (ret);
 }
 
-int selfstats(t_player* player, int max)
+t_return selfstats(t_player* player, int max)
 {
+  t_return ret;
+  char str[12];
+
+  snprintf(str, 12, "%d", player->energy);
+  ret.code = 0;
+  ret.data = str;
   printf("Energie: %d\n", player->energy);
-  return (0);
+  return (ret);
 }

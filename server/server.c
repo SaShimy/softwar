@@ -42,7 +42,7 @@ t_game *init_game(t_conf *conf)
   container->last = NULL;
   container->nb_elem = 0;
   game->container = container;
-  
+
   return (game);
 }
 
@@ -51,18 +51,45 @@ int main(int argc, char **argv)
   int i;
   int j;
   t_game *game;
-
   t_conf conf;
+
+  srand(time(NULL));
   set_default_conf(&conf);
   game = init_game(&conf);
   printf("Configuration:\n-Verbose: %d\n-Size: %d\n-Cycle: %d\n-Log file: %s\n-Rep-port: %d\n-Pub-port: %d\n", conf.verbose, conf.size, conf.cycle, conf.log_file_path, conf.rep_port, conf.pub_port);
   // for (i = 0; i < conf.size; i++) {
   //   printf("%d\n", strlen(map[i]));
   // }
+  listen_rep(conf, game);
+  /* identify("#0x01", game);
+  identify("#0x02", game);
+  identify("#0x03", game);
+  identify("#0x04", game);
+   create_cell(game);
+  printf("x: %d\n", game->container->first->x);
+  printf("y: %d\n", game->container->first->y);
+  game->game_status = 1;
+  listen_rep(conf, game);
+  */ //test david
+  
+  // THREAD / PUB test aure
+//    init_pub_thread(game, &conf);
+//    test(game, &conf);
+  // END THREAD / PUB
+
+//   listen_pub(conf, publisher);
+
+//   while(publisher.status == 0) {
+//        printf(".");
+//        usleep(3000);
+//   }
+  // printf("player 1 :\n");
+//   identify("#0x01", game);
+  // printf("player 2 :\n");
+//  identify("#0x01", game);
   // identify("#0x02", game);
   // identify("#0x03", game);
   // identify("#0x04", game);
-  // game->game_status = 1;
-  listen_rep(conf, game);
+//  game->game_status = 1;
   return (0);
 }

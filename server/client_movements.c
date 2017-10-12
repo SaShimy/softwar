@@ -1,17 +1,22 @@
 #include "server.h"
 
-int jump(t_player *player, int max)
+t_return jump(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->energy < 2)
     {
-      return (1);//pas assez d'energie
+      ret.code = 1;
+      return (ret);//pas assez d'energie
     }
   if ((player->orientation == 1 && player->pos_y - 2 < 0) ||
       (player->orientation == 3 && player->pos_y + 2 > max) ||
       (player->orientation == 0 && player->pos_x - 2 < 0) ||
       (player->orientation == 2 && player->pos_x + 2 > max))
     {
-      return (2);//ne peut pas avancer
+      ret.code = 2;
+      return (ret);//ne peut pas avancer
     }
   if (player->orientation % 2 == 0)
     {
@@ -21,22 +26,28 @@ int jump(t_player *player, int max)
     {
       player->pos_y += player->orientation == 1 ? -2 : 2;
     }
-
-  return (0);
+  ret.code = 0;
+  player->energy -= 2;
+  return (ret);
 }
 
-int forward(t_player *player, int max)
+t_return forward(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->ap < 0.5)
     {
-      return (1);//pas assez d'energie
+      ret.code = 1;
+      return (ret);//pas assez d'energie
     }
   if ((player->orientation == 1 && player->pos_y - 1 < 0) ||
      (player->orientation == 3 && player->pos_y + 1 > max) ||
      (player->orientation == 0 && player->pos_x - 1 < 0) ||
      (player->orientation == 2 && player->pos_x + 1 > max))
     {
-      return (2);//ne peut pas avancer
+      ret.code = 2;
+      return (ret);//ne peut pas avancer
     }
   if (player->orientation % 2 == 0)
     {
@@ -46,22 +57,28 @@ int forward(t_player *player, int max)
     {
       player->pos_y += player->orientation == 1 ? -1 : 1;
     }
-  
-  return (0);
+  ret.code = 0;
+  player->ap -= 0.5;
+  return (ret);
 }
 
-int backward(t_player *player, int max)
+t_return backward(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->ap < 1)
     {
-      return (1);//pas assez d'energie
+      ret.code = 1;
+      return (ret);//pas assez d'energie
     }
   if ((player->orientation == 1 && player->pos_y + 1 > max) ||
       (player->orientation == 3 && player->pos_y - 1 < 0) ||
       (player->orientation == 0 && player->pos_x + 1 > max) ||
       (player->orientation == 2 && player->pos_x - 1 < 0))
     {
-      return (2);//ne peut pas avancer 
+      ret.code = 2;
+      return (ret);//ne peut pas avancer 
     }
   if (player->orientation % 2 == 0)
     {
@@ -71,15 +88,20 @@ int backward(t_player *player, int max)
     {
       player->pos_y += player->orientation == 1 ? -1 : 1;
     }
-
-  return (0);
+  ret.code = 0;
+  player->ap -= 1;
+  return (ret);
 }
 
-int left(t_player *player, int max)
+t_return left(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->ap < 0.5)
     {
-      return (1);
+      ret.code = 1;
+      return (ret);
     }
 
   player->orientation -= 1;
@@ -87,20 +109,27 @@ int left(t_player *player, int max)
     {
       player->orientation = 3;
     }
-  return (0);
+  ret.code = 0;
+  player->ap -= 0.5;
+  return (ret);
 }
 
-int right(t_player *player, int max)
+t_return right(t_player *player, int max)
 {
+  t_return ret;
+
+  ret.data = "null";
   if (player->ap < 0.5)
     {
-      return (1);
+      ret.code = 1;
+      return (ret);
     }
-
   player->orientation += 1;
   if (player->orientation > 3)
     {
       player->orientation = 0;
     }
-  return (0);
+  ret.code = 0;
+  player->ap -= 0.5;
+  return (ret);
 }

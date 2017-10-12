@@ -9,7 +9,7 @@ t_actions actions[9] = {
   {"left", left},
   {"looking", looking},
   {"selfid", selfid},
-  {"selfstats", selfstats}
+  {"selfstats", selfstats},
 };
 
 int server_send_msg(char *target, char *message, zsock_t *router) {
@@ -68,7 +68,7 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
     {
       if (strcmp(action, actions[i].name) == 0)
       {
-        printf("Forward: %d\n", actions[i].func(current_player, game->conf->size));
+        printf("Forward: %d\n", actions[i].func(current_player, game->conf->size).code);
         done = true;
       }
     }
