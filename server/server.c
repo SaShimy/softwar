@@ -73,23 +73,8 @@ int main(int argc, char **argv)
   */ //test david
   
   // THREAD / PUB test aure
-    t_thread *thread;
-    pthread_t t;
-    int ret;
-  thread = init_thread(game, &conf);
-
-  ret = pthread_create (&t,NULL,exec_pub, thread);
-
-    if (!ret)
-    {
-        fprintf (stderr, "%s\n", strerror (ret));
-    }
-    else {
-        fprintf (stderr, "%s\n", strerror (ret));
-    }
-    pthread_join (t, NULL);
-  zsock_destroy(&thread->publisher);
-
+//    init_pub_thread(game, &conf);
+//    test(game, &conf);
   // END THREAD / PUB
 
 //   listen_pub(conf, publisher);
@@ -99,7 +84,7 @@ int main(int argc, char **argv)
 //        usleep(3000);
 //   }
   // printf("player 1 :\n");
-  // identify("#0x01", game);
+//   identify("#0x01", game);
   // printf("player 2 :\n");
 //  identify("#0x01", game);
   // identify("#0x02", game);

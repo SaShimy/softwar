@@ -149,4 +149,9 @@ zsock_t		*init_pub(t_conf *conf);
 void *exec_pub(void *arg);
 t_thread	*init_thread(t_game *game, t_conf *conf);
 
+void *test_exec_pub(void *arg);
+void test(t_game *game, t_conf *conf);
+void init_pub_thread(t_game *game, t_conf *conf);
+
+
 #endif
