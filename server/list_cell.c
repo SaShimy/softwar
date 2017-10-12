@@ -13,15 +13,18 @@ int is_player(t_player player[4], int x, int y)
   return (0);
 }
 
-int is_cell(t_container *container, int x, int y)
+int is_cell(t_game *game, int x, int y)
 {
   t_cell *tmp;
+  t_container container;
+
+  container = game->container;
   
-  if (container->nb_elem == 0)
+  if (container.nb_elem == 0)
     {
       return (0);
     }
-  tmp = container->first;
+  tmp = container.first;
   while (tmp != NULL)
     {
       if (tmp->x == x && tmp->y == y)
@@ -49,7 +52,7 @@ t_container_case *get_fill(t_game *game)
   for (i = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (is_player(game->players, i, j) || is_cell(game->container, i, j))
+	if (is_player(game->players, i, j) || is_cell(game, i, j))
 	  {
 	    length++;
 	  }
@@ -58,7 +61,7 @@ t_container_case *get_fill(t_game *game)
   for (i = 0, length = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (is_player(game->players, i, j) || is_cell(game->container, i, j))
+	if (is_player(game->players, i, j) || is_cell(game, i, j))
 	  {
 	    tab_case[length].x = i;
 	    tab_case[length].y = j;
@@ -82,7 +85,7 @@ t_container_case *get_empty(t_game *game)
   for (i = 0, length = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (!is_player(game->players, i, j) && !is_cell(game->container, i, j))
+	if (!is_player(game->players, i, j) && !is_cell(game, i, j))
 	  {
 	    length++;
 	  }
@@ -91,7 +94,7 @@ t_container_case *get_empty(t_game *game)
   for (i = 0, length = 0; i < game->conf->size; i++)
    {
      for (j = 0; j < game->conf->size; j++)
-       if (!is_player(game->players, i, j) && !is_cell(game->container, i, j))
+       if (!is_player(game->players, i, j) && !is_cell(game, i, j))
 	 {
 	   tab_case[length].x = i;
 	   tab_case[length].y = j;
@@ -140,7 +143,7 @@ int	create_cell_condition(t_game *game, int size, t_cell *cell)
   rand = generer_rand(0, length);
   cell->x = tab_case[rand].x;
   cell->y = tab_case[rand].y;
-  add_cell_to_container(game->container, cell);
+  add_cell_to_container(&game->container, cell);
   return (0);
 }
 
@@ -183,23 +186,23 @@ void	del_cell_from_container(t_game *game, t_cell *cell)
 
   cell_prev = cell->prev;
   cell_next = cell->next;
-  if ( cell && game->container->nb_elem > 0)
+  if ( cell && game->container.nb_elem > 0)
     {
       if (!cell_prev)
 	{
 	  if (!cell_next)
 	    {
-	      game->container->first = NULL;
-	      game->container->last = NULL;
+	      game->container.first = NULL;
+	      game->container.last = NULL;
 	    }
 	  else if (cell_next)
 	    {
-	      game->container->first = cell_next;
+	      game->container.first = cell_next;
 	      cell_next->prev = NULL;
 	    }
 	}
-      del_cd(game->container, cell_prev, cell_next);
+      del_cd(&game->container, cell_prev, cell_next);
       free(cell);
-      game->container->nb_elem -= 1;
+      game->container.nb_elem -= 1;
     }
 }

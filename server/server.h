@@ -157,6 +157,6 @@ void init_pub_thread(t_game *game, t_conf *conf);
 ** check case
 */
 int is_player(t_player player[4], int x, int y);
-int is_cell(t_container *container, int x, int y);
+int is_cell(t_game *game, int x, int y);
 
 #endif
