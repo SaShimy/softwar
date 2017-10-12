@@ -59,11 +59,10 @@ int main(int argc, char **argv)
   // for (i = 0; i < conf.size; i++) {
   //   printf("%d\n", strlen(map[i]));
   // }
-  identify("#0x01", game);
   // identify("#0x02", game);
   // identify("#0x03", game);
   // identify("#0x04", game);
-  game->game_status = 1;
+  // game->game_status = 1;
   listen_rep(conf, game);
   return (0);
 }
