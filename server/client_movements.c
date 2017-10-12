@@ -1,6 +1,6 @@
 #include "server.h"
 
-t_return jump(t_player *player, int max)
+t_return jump(t_player *player, int max, char *data)
 {
   t_return ret;
 
@@ -31,7 +31,7 @@ t_return jump(t_player *player, int max)
   return (ret);
 }
 
-t_return forward(t_player *player, int max)
+t_return forward(t_player *player, int max, char *data)
 {
   t_return ret;
 
@@ -62,7 +62,7 @@ t_return forward(t_player *player, int max)
   return (ret);
 }
 
-t_return backward(t_player *player, int max)
+t_return backward(t_player *player, int max, char *data)
 {
   t_return ret;
 
@@ -93,7 +93,7 @@ t_return backward(t_player *player, int max)
   return (ret);
 }
 
-t_return left(t_player *player, int max)
+t_return left(t_player *player, int max, char *data)
 {
   t_return ret;
 
@@ -114,7 +114,7 @@ t_return left(t_player *player, int max)
   return (ret);
 }
 
-t_return right(t_player *player, int max)
+t_return right(t_player *player, int max, char *data)
 {
   t_return ret;
 

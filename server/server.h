@@ -93,7 +93,7 @@ typedef struct s_thread
 typedef struct s_actions
 {
   char *name;
-  t_return (*func) (t_player* player, int max);
+  t_return (*func) (t_player* player, int max, char *data);
 }               t_actions;
 
 
@@ -119,16 +119,16 @@ int check_log_file(char *path);
 ** User ingame function
 */
 t_return identify(char *data, t_game *game);
-t_return leftfwd(t_player *player, int max);
-t_return rightfwd(t_player *player, int max);
-t_return forward(t_player *player, int max);
-t_return backward(t_player *player, int max);
-t_return right(t_player *player, int max);
-t_return left(t_player *player, int max);
-t_return looking(t_player *player, int max);
-t_return selfid(t_player *player, int max);
-t_return selfstats(t_player* player, int max);
-t_return jump(t_player *player, int max);
+t_return leftfwd(t_player *player, int max, char *data);
+t_return rightfwd(t_player *player, int max, char *data);
+t_return forward(t_player *player, int max, char *data);
+t_return backward(t_player *player, int max, char *data);
+t_return right(t_player *player, int max, char *data);
+t_return left(t_player *player, int max, char *data);
+t_return looking(t_player *player, int max, char *data);
+t_return selfid(t_player *player, int max, char *data);
+t_return selfstats(t_player* player, int max, char *data);
+t_return jump(t_player *player, int max, char *data);
 
 int listen_rep(t_conf conf, t_game *game);
 int server_send_msg(char *target, char *message, zsock_t *router);
@@ -153,5 +153,10 @@ void *test_exec_pub(void *arg);
 void test(t_game *game, t_conf *conf);
 void init_pub_thread(t_game *game, t_conf *conf);
 
+/*
+** check case
+*/
+int is_player(t_player player[4], int x, int y);
+int is_cell(t_container *container, int x, int y);
 
 #endif

@@ -1,6 +1,6 @@
 #include "server.h"
 
-t_return leftfwd(t_player *player, int max)
+t_return leftfwd(t_player *player, int max, char *data)
 {
   t_return ret;
 
@@ -36,7 +36,7 @@ t_return leftfwd(t_player *player, int max)
   return (ret);
 }
 
-t_return rightfwd(t_player *player, int max)
+t_return rightfwd(t_player *player, int max, char *data)
 {
   t_return ret;
 
@@ -72,7 +72,7 @@ t_return rightfwd(t_player *player, int max)
   return (ret);
 }
 
-t_return looking(t_player *player, int max)
+t_return looking(t_player *player, int max, char *data)
 {
   t_return ret;
   char str[12];
@@ -84,7 +84,7 @@ t_return looking(t_player *player, int max)
   return (ret);
 }
 
-t_return selfid(t_player *player, int max)
+t_return selfid(t_player *player, int max, char *data)
 {
   t_return ret;
   
@@ -94,7 +94,7 @@ t_return selfid(t_player *player, int max)
   return (ret);
 }
 
-t_return selfstats(t_player* player, int max)
+t_return selfstats(t_player* player, int max, char *data)
 {
   t_return ret;
   char str[12];
