@@ -7,5 +7,5 @@ sock.subscribe('test');
 console.log('Subscriber connected to port 4243');
 
 sock.on('message', function(topic, message) {
-	console.log('received a message related to:', topic, 'containing message:', message);
+	console.log('received a message related to:', topic.toString(), 'containing message:', message.toString());
 });
