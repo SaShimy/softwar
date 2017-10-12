@@ -73,7 +73,7 @@ typedef struct  s_game
 {
   t_conf *conf;
   t_player players[4];
-  t_container *container;
+  t_container container;
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
