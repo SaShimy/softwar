@@ -3,7 +3,7 @@ const zmq = require('zeromq');
 const sock = zmq.socket('sub');
 
 sock.connect('tcp://127.0.0.1:4243');
-sock.subscribe('test');
+sock.subscribe('softwar');
 console.log('Subscriber connected to port 4243');
 
 sock.on('message', function(topic, message) {

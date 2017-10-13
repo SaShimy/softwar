@@ -9,6 +9,14 @@
 #include <time.h>
 #include <pthread.h>
 
+
+enum GameStatus {
+  GAME_WAITING = 0,
+  GAME_STARTED = 1,
+  GAME_IN_PROGRESS = 2,
+  GAME_FINISHED = 3
+};
+
 typedef struct s_return
 {
   int code;
@@ -75,6 +83,7 @@ typedef struct  s_game
   t_conf *conf;
   t_player players[4];
   t_container container;
+  int   players_length;
   int game_status; // 0 waiting, 1 started, 2 finished
 }               t_game;
 
@@ -150,9 +159,8 @@ zsock_t		*init_pub(t_conf *conf);
 void *exec_pub(void *arg);
 t_thread	*init_thread(t_game *game, t_conf *conf);
 
-void *test_exec_pub(void *arg);
 void test(t_game *game, t_conf *conf);
-void init_pub_thread(t_game *game, t_conf *conf);
+int init_pub_thread(t_game *game, t_conf *conf);
 
 /*
 ** check case
