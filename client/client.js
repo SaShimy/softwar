@@ -71,14 +71,65 @@ pubClient.connect("tcp://127.0.0.1:"+pubPort);
 pubClient.subscribe("softwar");
 
 ;(async () => {
-	await reqClient.connect();
+    await reqClient.connect();
+    let action_gather = 0;
+    let action_attack = 0;
+    let action_leftfwd = 0;
+    let action_rightfwd = 0;
+    while (1) {
+	if (action_gather == 1) {
+	    const energy = await reqClient.selfstats();
+	    if(energy < 85) {
+		await reqClient.gather;
+	    }
+	    action_gather = 0;
+	}
+	const tab = JSON.parse(await reqClient.watch());
+	for (let i = 0; i < tab.length && tab[i] == "empty"; i++);
+	if(tab[i] == "energy") {
+	    if(i == 0) {
+		await reqClient.forward();
+		action_gather = 1;
+	    } else if (i == 1) {
+		await reqClient.jump();
+		await reqClient.leftfwd();
+		action_gather = 1;
+	    } else if (i == 2) {
+		await reqClient.jump();
+		action_gather = 1;
+	    } else if (i == 3) {
+		await reqClient.jump();
+		await reqClient.rightfwd();
+		action_gather = 1;	
+	    }
+	} else if(tab[i] != "empty"){
+	    if(action_attack >= 0) {
+		try {
+		    await reqClient.attack();
+		} catch(e) {
+		    
+		}
+		action_attack = -2;
+	    }
+	} else {
+	    try {
+		await reqClient.forward();
+	    } catch(e) {
+		    await reqClient.left();
+	    }
+	}
+	action_attack++;
+	
+	
+    }
+	/*await reqClient.connect();
 	await reqClient.forward();
 	await reqClient.attack();
 	await reqClient.inspect("#0x02");
 	console.log(reqClient.identity, "connected.");
 	console.log(await reqClient.selfstats());
 	await reqClient._wait(3000);
-	console.log(await reqClient.selfstats());
+	console.log(await reqClient.selfstats());*/
 	// await reqClient.forward();
 })()
 .catch(err => {
