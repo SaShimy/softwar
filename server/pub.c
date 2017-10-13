@@ -45,14 +45,29 @@ void *exec_pub(void *arg)
     zsock_t *pub = thread->publisher;
     int cycle;
     t_game *game;
-
+//    char *res;
 
     game = thread->game;
     cycle = thread->game->conf->cycle;
+    json_t *json;
 
+    json = json_pack("{s:i,s:s}", "notification_type", 0, "data", "null");
+//    json = json_pack("{sisi}", "foo", 42, "bar", 7);
+    size_t size = json_dumpb(json, NULL, 0, 0);
+//    if (size == 0)
+//        return -1;
+
+    char *buf = alloca(size);
+
+    size = json_dumpb(json, buf, size, 0);
+    printf("%s\n",buf);
+//    free(buf);
+//    json = json_dumpb();
     while (!zsys_interrupted) {
         zstr_sendm (pub, "softwar");
-        zstr_sendf(pub, "Game status: %d", game->game_status);
+        zstr_sendf(pub, "JSON: %s", buf);
+//        zstr_sendf(pub, "Game status: %d", game->game_status);
+
         if (game->game_status == GAME_STARTED)
         {
             game->game_status = GAME_IN_PROGRESS;
@@ -70,7 +85,7 @@ void *exec_pub(void *arg)
                     game->players[j].alive = false;
                 }
             }
-            refresh_cycle(game);
+//            refresh_cycle(game);
             if (game->players_length < 2) {
                 int i;
                 for (i = 0; i < 4; i++) {
@@ -124,10 +139,6 @@ int init_pub_thread(t_game *game, t_conf *conf)
         fprintf (stderr, "%s\n", strerror (ret));
         return (-1);
     }
-
-//    pthread_join (t, NULL);
-
-//    game();
     zsock_destroy(&thread->publisher);
     return (0);
 }
