@@ -85,7 +85,7 @@ const waitRefill = async () => {
 }
 
 ;(async () => {
-	await waitRefill();
+    await waitRefill();
     await reqClient.connect();
     let action_gather = 0;
     let action_attack = 0;
@@ -95,6 +95,7 @@ const waitRefill = async () => {
 	if (action_gather == 1) {
 	    const energy = await reqClient.selfstats();
 	    if(energy < 85) {
+		await waitRefill();
 		await reqClient.gather;
 	    }
 	    action_gather = 0;
@@ -103,26 +104,59 @@ const waitRefill = async () => {
 	for (let i = 0; i < tab.length && tab[i] == "empty"; i++);
 	if(tab[i] == "energy") {
 	    if(i == 0) {
+		await waitRefill();
 		await reqClient.forward();
 		action_gather = 1;
+		//await waitRefill();
 	    } else if (i == 1) {
-		await reqClient.jump();
-		await reqClient.leftfwd();
-		action_gather = 1;
+		try {
+		    await waitRefill();		    
+		    await reqClient.jump();
+		    await reqClient.leftfwd();
+		    action_gather = 1;
+		    //await waitRefill();
+		} catch(e) {
+		    await waitRefill();
+		    await reqClient.forward();
+		    await reqClient.forward();
+		    await waitRefill();
+		    await reqClient.leftfwd();
+		    action_gather = 1;
+		}
 	    } else if (i == 2) {
-		await reqClient.jump();
-		action_gather = 1;
+		try {
+		    await reqClient.jump();
+		    action_gather = 1;
+		} catch(e) {
+		    await waitRefill();
+		    await reqClient.forward();
+		    await reqClient.forward();
+		    action_gather = 1;
+		}
+		
 	    } else if (i == 3) {
-		await reqClient.jump();
-		await reqClient.rightfwd();
-		action_gather = 1;	
+		try {
+		    await waitRefill();
+		    await reqClient.jump();
+		    await reqClient.rightfwd();
+		    action_gather = 1;
+		    //await waitRefill();
+		} catch(e) {
+		    await waitRefill();
+		    await reqClient.forward();
+		    await reqClient.forward();
+		    await waitRefill();
+		    await reqClient.rightfwd();
+		    action_gather = 1;
+		}
+		
 	    }
 	} else if(tab[i] != "empty"){
 	    if(action_attack >= 0) {
 		try {
+		    await waitRefill();
 		    await reqClient.attack();
 		} catch(e) {
-		    
 		}
 		action_attack = -2;
 	    }
@@ -133,9 +167,7 @@ const waitRefill = async () => {
 		    await reqClient.left();
 	    }
 	}
-	action_attack++;
-	
-	
+	//action_attack++;
     }
 	/*await reqClient.connect();
 	await reqClient.forward();
