@@ -66,12 +66,14 @@ pubClient.on("message", (channel, message) => {
 	const notif = JSON.parse(message.toString().match(/\{.*\}/)[0]);
 	console.log(notif);
 	if (notif.notification_type === 0) {
-		GAME.mapSize = notif.data.map_size;
-		GAME.status = notif.data.game_status;
-		GAME.players = notif.data.players;
-		GAME.energyCells = notif.data.energy_cells;
+		GAME.mapSize = notif.map_size;
+		GAME.status = notif.game_status;
+		GAME.players = notif.players || [];
+		GAME.energyCells = notif.energy_cells || [];
 	}
 	if (notif.notification_type === 3) {
+		console.log("You are dead.");
+		process.exit();
 		if (notif.data.identity === reqClient.identity) {
 			PLAYER.alive = false;
 		} else {
@@ -108,12 +110,13 @@ const waitRefill = async () => {
 }
 
 ;(async () => {
-    await waitRefill();
     await reqClient.connect();
+    await waitRefill();
     let action_gather = 0;
     let action_leftfwd = 0;
     let action_rightfwd = 0;
     while (1) {
+		reqClient._wait(1);
 	if (action_gather == 1) {
 	    const energy = await reqClient.selfstats();
 	    if(energy < 85) {
@@ -124,14 +127,16 @@ const waitRefill = async () => {
 	    }
 	    action_gather = 0;
 	}
-	const tab = JSON.parse(await reqClient.watch());
-	for (let i = 0; i < tab.length && tab[i] == "empty"; i++);
+	const tab = (await reqClient.watch()).replace("[", "").replace("]", "").trim().split(",");
+	for (var i = 0; i < tab.length && tab[i] == "empty"; i++);
 	if(tab[i] == "energy") {
 	    if(i == 0) {
 		if(PLAYER.ap < 0.5) {
 		    await waitRefill();
 		}
-		await reqClient.forward();
+		try {
+			await reqClient.forward();
+		} catch (error) {}
 		action_gather = 1;
 		//await waitRefill();
 	    } else if (i == 1) {
@@ -147,12 +152,24 @@ const waitRefill = async () => {
 		    if(PLAYER.ap < 1) {
 			await waitRefill();
 		    }
-		    await reqClient.forward();
-		    await reqClient.forward();
+			try {
+				await reqClient.forward();
+			} catch (error) {}
+			try {
+				await reqClient.forward();
+			} catch (error) {}
 		    if(PLAYER.ap < 1) {
-			await waitRefill();
-		    }
-		    await reqClient.leftfwd();
+				try {
+					await waitRefill();
+			
+				} catch (error) {
+					
+				}
+			}
+			try {
+				await reqClient.leftfwd();
+			} catch (error) {
+			}
 		    action_gather = 1;
 		}
 	    } else if (i == 2) {
@@ -161,10 +178,18 @@ const waitRefill = async () => {
 		    action_gather = 1;
 		} catch(e) {
 		    if(PLAYER.ap < 1) {
-			await waitRefill();
-		    }
-		    await reqClient.forward();
-		    await reqClient.forward();
+				try {
+					await waitRefill();
+				} catch (error) {
+					
+				}
+			}
+			try {
+				await reqClient.forward();
+			} catch (error) {}
+			try {
+				await reqClient.forward();
+			} catch (error) {}
 		    action_gather = 1;
 		}
 		
@@ -179,20 +204,28 @@ const waitRefill = async () => {
 		    //await waitRefill();
 		} catch(e) {
 		    if(PLAYER.ap < 1) {
-			await waitRefill();
+				try {
+					await waitRefill();
+				} catch (error) {}
 		    }
-		    await reqClient.forward();
-		    await reqClient.forward();
+			try {
+				await reqClient.forward();
+			} catch (error) {}
+			try {
+				await reqClient.forward();
+			} catch (error) {}
 		    if(PLAYER.ap < 1) {
 			await waitRefill();
-		    }
-		    await reqClient.rightfwd();
+			}
+			try {
+				await reqClient.rightfwd();
+			} catch (error) {}
 		    action_gather = 1;
 		}
 		
 	    }
 	} else if(tab[i] != "empty"){
-	    if(action_attack >= 0) {
+	    if(PLAYER.action_attack >= 0) {
 		try {
 		    if(PLAYER.ap < 1) {
 			await waitRefill();
