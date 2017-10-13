@@ -71,6 +71,7 @@ int createPlayer(char *data, t_game *game)
   player->ap = 1;
   player->statut = 0;
   player->player = game->players_length+1;
+  player->alive = true;
   getPos(game, player);
   if (player->pos_y == 0)
     {
