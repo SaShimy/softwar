@@ -217,24 +217,89 @@ char  *notification_client_win(char *id)
 
 char *game_info(t_game *game)
 {
+    int i;
     char *buffer;
-//    char *players;
+    char *players;
+    char *map;
+    int j;
     json_t *json;
 //
 //
-//    for (i = 0; i < 4; i++) {
-//        if (game->players[i]) {
+
+
+
+    if (game->game_status == GAME_IN_PROGRESS) {
+        players = "[";
+        for (i = 0; i < 4; i++) {
+//            printf("PLAYER: %s\n", player_info(game->players[i]));
+            players = concat(players, player_info(game->players[i]));
+            if (i < 3)
+                players = concat(players, ", ");
+        }
+        players = concat(players, "]");
+
+
+//        t_cell *tmp;
+//        t_container container;
 //
-//             }
+//        container = game->container;
+//
+//          tmp = container.first;
+
+//        map = "[";
+//            while (tmp != NULL)
+//            {
+//              map = concat(map, cell_info(tmp));
+//              tmp = tmp->next;
+//              if (tmp != NULL)
+//                  map = concat(map, ", ");
+//            }
+//            for (j = 0; j < game->conf->size; j++) {
+//
+//
 //        }
-//    }
-    json = json_pack("{s:i,s:i,s:i}", "notification_type", 0, "map_size", game->conf->size, "game_status", game->game_status);
-//
+//        map = concat(map, "]");
+    }
+
+    json = json_pack("{s:i,s:i,s:i,s:s}", "notification_type", 0, "map_size", game->conf->size, "game_status", game->game_status, "players", players);
+
     size_t size = json_dumpb(json, NULL, 0, 0);
-//
+
     buffer = malloc (sizeof (char) * size);
-//
+
     size = json_dumpb(json, buffer, size, 0);
-//
+
+    return buffer;
+}
+
+char *player_info(t_player player)
+{
+    char *buffer;
+    json_t *json;
+
+    json = json_pack("{s:s,s:i,s:i,s:i,s:i}", "name", player.id, "x", player.pos_x, "y", player.pos_y, "energy", player.energy, "looking", player.orientation);
+
+    size_t size = json_dumpb(json, NULL, 0, 0);
+
+    buffer = malloc (sizeof (char) * size);
+
+    size = json_dumpb(json, buffer, size, 0);
+
+    return buffer;
+}
+
+char *cell_info(t_cell *cell)
+{
+    char *buffer;
+    json_t *json;
+
+    json = json_pack("{s:i,s:i,s:i}", "x", cell->x, "y", cell->y, "value", cell->value);
+
+    size_t size = json_dumpb(json, NULL, 0, 0);
+
+    buffer = malloc (sizeof (char) * size);
+
+    size = json_dumpb(json, buffer, size, 0);
+
     return buffer;
 }
