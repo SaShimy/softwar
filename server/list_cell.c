@@ -13,7 +13,7 @@ int is_player(t_player player[4], int x, int y)
   return (0);
 }
 
-t_player *get_id_from_pos(t_player player[4], int x, int y)
+t_player *get_player_from_pos(t_player player[4], int x, int y)
 {
   int i;
   t_player *playertmp;
@@ -122,6 +122,9 @@ t_container_case *get_empty(t_game *game)
   container->tab_case = tab_case;
   return (container);
 }
+
+
+
 void    add_cell_to_container(t_container *container, t_cell *cell) {
   if (container && cell)
     {
@@ -162,6 +165,22 @@ int	create_cell_condition(t_game *game, int size, t_cell *cell)
   cell->y = tab_case[rand].y;
   add_cell_to_container(&game->container, cell);
   return (0);
+}
+
+t_cell *search_cell(t_container container, int x, int y)
+{
+  t_cell *tmp;
+
+  tmp = container.first;
+  while (tmp != NULL)
+    {
+      if (tmp->x == x && tmp->y == y)
+	{
+	  return (tmp);
+	}
+      tmp = tmp->next;
+    }
+  return (tmp);
 }
 
 int	create_cell(t_game *game)

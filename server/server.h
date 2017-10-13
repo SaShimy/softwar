@@ -60,6 +60,7 @@ typedef struct  s_player
   int ap;
   int orientation;// 0 left 1 up 2 right 3 bottom
   int player;
+  int statut;
 }               t_player;
 
 typedef struct s_cell
@@ -167,6 +168,6 @@ int init_pub_thread(t_game *game, t_conf *conf);
 */
 int is_player(t_player player[4], int x, int y);
 int is_cell(t_game *game, int x, int y);
-t_player *get_id_from_pos(t_player player[4], int x, int y);
-
+t_player *get_player_from_pos(t_player player[4], int x, int y);
+t_cell *search_cell(t_container container, int x, int y);
 #endif

@@ -30,16 +30,24 @@ t_return inspect(t_player player[4], int max, char *data, t_game *game)
 t_return gather(t_player *player, int max, char *data, t_game *game)
 {
   t_return ret;
-
+  t_cell *cell;
+  
   ret.data = "null";
-  return (ret);
-}
+  if (player->ap < 1)
+    {
+      ret.code = 1;
+      return (ret);//pas assez d'energie
+    }
 
-t_return attack(t_player *player, int max, char *data, t_game *game)
-{
-  t_return ret;
-
-  ret.data = "null";
+  if (! is_cell(game, player->pos_x, player->pos_y))
+    {
+      ret.code = 2;
+      return (ret);//pas de cell
+    }
+  cell = search_cell(game->container, player->pos_x, player->pos_y);
+  player->energy += cell->value;
+  del_cell_from_container(game, cell);
+  ret.code = 0;
   return (ret);
 }
 
@@ -103,6 +111,25 @@ t_case *get_direction_watch(t_player *player)
   return (tab_case);
 }
 
+t_return attack(t_player *player, int max, char *data, t_game *game)
+{
+  t_return ret;
+  t_case *tab_case;
+  int x;
+  t_player *playertmp;
+  tab_case = get_direction_watch(player);
+  for(x = 0; x < 4; x++)
+    {
+      if (is_player(game->players, tab_case[x].x, tab_case[x].y))
+	{
+	  playertmp = get_player_from_pos(game->players, tab_case[x].x, tab_case[x].y);
+	  playertmp->statut = 2;
+	}
+    }
+  ret.data = "null";
+  return (ret);
+}
+
 t_return watch(t_player *player, int max, char *data, t_game *game)
 {
   t_return ret;
@@ -110,14 +137,14 @@ t_return watch(t_player *player, int max, char *data, t_game *game)
   t_case *tab_case;
   char *str, *tmp, *tmp2;
 
-  str = tmp = "";
+  str = tmp = "[";
   tab_case =  get_direction_watch(player);
   for (x = 0; x < 4; x++)
     {
       if (is_player(game->players, tab_case[x].x, tab_case[x].y))
 	{
 	  free(str);
-	  tmp2 = concat(get_id_from_pos(game->players, tab_case[x].x, tab_case[x].y)->id, ",");
+	  tmp2 = concat(get_player_from_pos(game->players, tab_case[x].x, tab_case[x].y)->id, ",");
 	  str =  concat(tmp, tmp2);
 	  free(tmp);
 	  free(tmp2);
@@ -139,6 +166,8 @@ t_return watch(t_player *player, int max, char *data, t_game *game)
 	}
 		    
     }
+  free(str);
+  str = concat(tmp, "]");
   ret.data = str;
   return (ret);
 }

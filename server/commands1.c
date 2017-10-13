@@ -69,7 +69,7 @@ int createPlayer(char *data, t_game *game)
   player->id = data;
   player->energy = 50;
   player->ap = 1;
-
+  player->statut = 0;
   player->player = game->players_length+1;
   getPos(game, player);
   if (player->pos_y == 0)
