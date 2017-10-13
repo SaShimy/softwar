@@ -45,66 +45,52 @@ void *exec_pub(void *arg)
     zsock_t *pub = thread->publisher;
     int cycle;
     t_game *game;
-//    char *res;
-
+    char *json;
     game = thread->game;
     cycle = thread->game->conf->cycle;
-    json_t *json;
 
-    json = json_pack("{s:i,s:s}", "notification_type", 0, "data", "null");
-//    json = json_pack("{sisi}", "foo", 42, "bar", 7);
-    size_t size = json_dumpb(json, NULL, 0, 0);
-//    if (size == 0)
-//        return -1;
-
-    char *buf = alloca(size);
-
-    size = json_dumpb(json, buf, size, 0);
-    printf("%s\n",buf);
-//    free(buf);
-//    json = json_dumpb();
     while (!zsys_interrupted) {
         zstr_sendm (pub, "softwar");
-        zstr_sendf(pub, "JSON: %s", buf);
-//        zstr_sendf(pub, "Game status: %d", game->game_status);
+        zstr_sendf(pub, "%s", game_info(game));
 
         if (game->game_status == GAME_STARTED)
         {
             game->game_status = GAME_IN_PROGRESS;
-            // TODO: SEND NOTIF GAME_STARTED
+//            json = game_started();
+            // SEND NOTIF GAME_STARTED
             zstr_sendm (pub, "softwar");
-            zstr_send(pub, "Game just started");
+            zstr_sendf(pub, "%s", notification_game_started());
         }
         if (game->game_status == GAME_IN_PROGRESS) {
             int j;
             for (j = 0; j < 4; j++) {
                 if (game->players[j].energy >= 100) {
-                    // TODO : SEND NOTIFICATION CLIENT_LOSE
+                    // SEND NOTIFICATION CLIENT_LOSE
                     zstr_sendm (pub, "softwar");
-                    zstr_sendf(pub, "CLIENT WIN: %s", game->players[j].id);
+                    zstr_sendf(pub, "%s", notification_client_lose(game->players[j].id));
+//                    zstr_sendm (pub, "softwar");
+//                    zstr_sendf(pub, "CLIENT WIN: %s", game->players[j].id);
                     game->players[j].alive = false;
                 }
             }
-//            refresh_cycle(game);
+            refresh_cycle(game);
             if (game->players_length < 2) {
                 int i;
                 for (i = 0; i < 4; i++) {
                     if (game->players[i].alive) {
-                        // TODO : SEND NOTIFICATION CLIENT_WIN
+                        // SEND NOTIFICATION CLIENT_WIN
                         zstr_sendm (pub, "softwar");
-                        zstr_sendf(pub, "CLIENT WIN: %s", game->players[i].id);
+                        zstr_sendf(pub, "%s", notification_client_win(game->players[i].id));
+//                        zstr_sendm (pub, "softwar");
+//                        zstr_sendf(pub, "CLIENT WIN: %s", game->players[i].id);
                         break;
                     }
-                    // TODO SEND NOTIFICATION GAME_END
-                    game->game_status = GAME_FINISHED;
-                    zstr_sendm (pub, "softwar");
-                    zstr_sendf(pub, "Game END: %d", game->game_status);
-                    pthread_exit(NULL);
                 }
+                game->game_status = GAME_FINISHED;
+                zstr_sendm (pub, "softwar");
+                zstr_sendf(pub, "%s", notification_game_finished());
+                pthread_exit(NULL);
             }
-//                for(int i = 0; i<4; i++) {
-//                    printf("Player: %s | %d E\n", game->players[i].id, game->players[i].energy);
-//                }
         }
 
         usleep(cycle);
@@ -134,7 +120,7 @@ int init_pub_thread(t_game *game, t_conf *conf)
     thread = init_thread(game, conf);
 
     ret = pthread_create (&t,NULL,exec_pub, thread->publisher);
-    if (ret)
+    if (!ret)
     {
         fprintf (stderr, "%s\n", strerror (ret));
         return (-1);
@@ -147,7 +133,7 @@ void refresh_cycle(t_game *game)
 {
     int i;
     for (i = 0; i < 4; i++) {
-        if (game->players[i].alive) {
+        if (game->players[i].alive == true) {
 
              if (game->players[i].energy > 2)
              {
@@ -155,10 +141,100 @@ void refresh_cycle(t_game *game)
                 game->players[i].ap = 1;
              } else {
                 // TODO : SEND NOTIFICATION CLIENT_DEAD
+                printf("%s\n", game->players[i].id);
+                notification_client_lose(game->players[i].id);
                 game->players[i].alive = false;
                 game->players_length -= 1;
              }
         }
     }
     create_cell(game);
+}
+
+char  *notification_game_started()
+{
+    json_t *json;
+    char    *buf;
+
+    json = json_pack("{s:i,s:s}", "notification_type", 1, "data", "null");
+
+    size_t size = json_dumpb(json, NULL, 0, 0);
+
+    buf = malloc (sizeof (char) * size);
+
+    size = json_dumpb(json, buf, size, 0);
+
+    return buf;
+}
+
+char  *notification_game_finished()
+{
+    json_t *json;
+    char    *buf;
+
+    json = json_pack("{s:i,s:s}", "notification_type", 2, "data", "null");
+
+    size_t size = json_dumpb(json, NULL, 0, 0);
+
+    buf = malloc (sizeof (char) * size);
+
+    size = json_dumpb(json, buf, size, 0);
+
+    return buf;
+}
+
+char  *notification_client_lose(char *id)
+{
+    json_t *json;
+    char    *buf;
+
+    json = json_pack("{s:i,s:s}", "notification_type", 3, "data", id);
+
+    size_t size = json_dumpb(json, NULL, 0, 0);
+
+    buf = malloc (sizeof (char) * size);
+
+    size = json_dumpb(json, buf, size, 0);
+
+    return buf;
+}
+
+char  *notification_client_win(char *id)
+{
+    json_t *json;
+    char    *buf;
+
+    json = json_pack("{s:i,s:s}", "notification_type", 4, "data", id);
+
+    size_t size = json_dumpb(json, NULL, 0, 0);
+
+    buf = malloc (sizeof (char) * size);
+
+    size = json_dumpb(json, buf, size, 0);
+
+    return buf;
+}
+
+char *game_info(t_game *game)
+{
+    char *buffer;
+//    char *players;
+    json_t *json;
+//
+//
+//    for (i = 0; i < 4; i++) {
+//        if (game->players[i]) {
+//
+//             }
+//        }
+//    }
+    json = json_pack("{s:i,s:i}", "map_size", game->conf->size, "game_status", game->game_status);
+//
+    size_t size = json_dumpb(json, NULL, 0, 0);
+//
+    buffer = malloc (sizeof (char) * size);
+//
+    size = json_dumpb(json, buffer, size, 0);
+//
+    return buffer;
 }

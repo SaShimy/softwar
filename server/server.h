@@ -164,6 +164,13 @@ t_thread	*init_thread(t_game *game, t_conf *conf);
 void test(t_game *game, t_conf *conf);
 int init_pub_thread(t_game *game, t_conf *conf);
 void refresh_cycle(t_game *game);
+char  *notification_game_started();
+char *game_info(t_game *game);
+char *notification_game_finished();
+char *notification_client_win(char *id);
+char *notification_client_lose(char *id);
+
+
 
 /*
 ** check case
