@@ -42,55 +42,57 @@ zsock_t		*init_pub(t_conf *conf)
 void *exec_pub(void *arg)
 {
     t_thread	*thread = (t_thread *)(arg);
-
-//    zsock_t *pub = (zsock_t *)(arg);
     zsock_t *pub = thread->publisher;
     int cycle;
-       t_game *game;
+    t_game *game;
 
-       game = thread->game;
+
+    game = thread->game;
     cycle = thread->game->conf->cycle;
 
-
-//    t_game *game = thread->game;
-//    int first = 0;
-//
-//    while (game->game_status == 1) {
-//        if (first == 0) {
-//
-//            first = 1;
-//        }
-//            zstr_sendm (pub, "testing");
-//            zstr_send(pub, "This is a test");
-//            zclock_sleep (1000);
-//    }
-
-//    printf("%d\n", thread->game->game_status);
-        while (!zsys_interrupted) {
-            zstr_sendm (pub, "softwar");
-            zstr_sendf(pub, "Game status: %d", game->game_status);
-//            zstr_sendm (pub, "softwar");
-//            zstr_send(pub, "Cycle");
-            if (game->game_status == GAME_STARTED)
-            {
-        	    game->game_status = GAME_IN_PROGRESS;
-                // SEND NOTIF GAME STARTED
-                zstr_sendm (pub, "testing");
-                zstr_send(pub, "Game just started");
+    while (!zsys_interrupted) {
+        zstr_sendm (pub, "softwar");
+        zstr_sendf(pub, "Game status: %d", game->game_status);
+        if (game->game_status == GAME_STARTED)
+        {
+            game->game_status = GAME_IN_PROGRESS;
+            // TODO: SEND NOTIF GAME_STARTED
+            zstr_sendm (pub, "testing");
+            zstr_send(pub, "Game just started");
+        }
+        if (game->game_status == GAME_IN_PROGRESS) {
+            for (int j = 0; j < 4; j++) {
+                if (game->players[j].energy >= 100) {
+                    // TODO : SEND NOTIFICATION CLIENT_LOSE
+                    zstr_sendm (pub, "softwar");
+                    zstr_sendf(pub, "CLIENT WIN: %s", game->players[j].id);
+                    game->players[j].alive = false;
+                }
             }
-            if (game->game_status == GAME_IN_PROGRESS) {
-//                refresh_cycle();
-//                zstr_sendm (pub, "softwar");
-//                zstr_send(pub, "");
-//
+            refresh_cycle(game);
+            if (game->players_length < 2) {
+                for (int i = 0; i < 4; i++) {
+                    if (game->players[i].alive) {
+                        // TODO : SEND NOTIFICATION CLIENT_WIN
+                        zstr_sendm (pub, "softwar");
+                        zstr_sendf(pub, "CLIENT WIN: %s", game->players[i].id);
+                        break;
+                    }
+                    // TODO SEND NOTIFICATION GAME_END
+                    game->game_status = GAME_FINISHED;
+                    zstr_sendm (pub, "softwar");
+                    zstr_sendf(pub, "Game END: %d", game->game_status);
+                    pthread_exit(NULL);
+                }
+            }
 //                for(int i = 0; i<4; i++) {
 //                    printf("Player: %s | %d E\n", game->players[i].id, game->players[i].energy);
 //                }
-            }
-
-            usleep(cycle);
-//                zclock_sleep (cycle);
         }
+
+        usleep(cycle);
+    }
+    pthread_exit(NULL);
 }
 
 t_thread	*init_thread(t_game *game, t_conf *conf)
@@ -130,8 +132,19 @@ int init_pub_thread(t_game *game, t_conf *conf)
 
 void refresh_cycle(t_game *game)
 {
-    // for (int i = 0; i < game->players_length; i++) {
-    //     game->players[i].energy -= 2;
+    for (int i = 0; i < 4; i++) {
+        if (game->players[i].alive) {
 
-    // }
+             if (game->players[i].energy > 2)
+             {
+                game->players[i].energy -= 2;
+                game->players[i].ap = 1;
+             } else {
+                // TODO : SEND NOTIFICATION CLIENT_DEAD
+                game->players[i].alive = false;
+                game->players_length -= 1;
+             }
+        }
+    }
+//    create_cell(game);
 }
