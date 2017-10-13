@@ -138,5 +138,5 @@ void refresh_cycle(t_game *game)
              }
         }
     }
-//    create_cell(game);
+    create_cell(game);
 }

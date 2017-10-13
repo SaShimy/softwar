@@ -98,25 +98,30 @@ t_container_case *get_empty(t_game *game)
   int length;
   t_case *tab_case;
   t_container_case *container;
-  
+
+  container = malloc(sizeof(t_container_case));
   for (i = 0, length = 0; i < game->conf->size; i++)
     {
       for (j = 0; j < game->conf->size; j++)
-	if (!is_player(game->players, i, j) && !is_cell(game, i, j))
-	  {
-	    length++;
-	  }
+	{
+	  if (!is_player(game->players, i, j) && !is_cell(game, i, j))
+	    {
+	      length++;
+	    }
+	}
     }
   tab_case = malloc(sizeof(t_case) * length);
   for (i = 0, length = 0; i < game->conf->size; i++)
    {
      for (j = 0; j < game->conf->size; j++)
-       if (!is_player(game->players, i, j) && !is_cell(game, i, j))
-	 {
-	   tab_case[length].x = i;
-	   tab_case[length].y = j;
-	   length++;
-	 }
+       {
+	 if (!is_player(game->players, i, j) && !is_cell(game, i, j))
+	   {
+	     tab_case[length].x = i;
+	     tab_case[length].y = j;
+	     length++;
+	   }
+       }
    }
   container->length = length;
   container->tab_case = tab_case;
@@ -152,7 +157,7 @@ int	create_cell_condition(t_game *game, int size, t_cell *cell)
   int rand;
   t_container_case *container;
   t_case *tab_case;
-  
+
   container = get_empty(game);
   tab_case = container->tab_case;
   length = container->length;
@@ -195,6 +200,7 @@ int	create_cell(t_game *game)
     }
   energy = generer_rand(5,15);
   cell->value = energy;
+  
   return (create_cell_condition(game, game->conf->size, cell));
 }
 
