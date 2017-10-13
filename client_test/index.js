@@ -1,5 +1,4 @@
 const zmq = require("zeromq");
-const inquirer = require("inquirer");
 const requests = [];
 const PORT = "4242";
 
