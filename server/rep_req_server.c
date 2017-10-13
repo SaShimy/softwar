@@ -54,7 +54,7 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
     {
       response = identify(data, game);
     }
-  } else if (game->game_status == 1)
+  } else if (game->game_status == 1 || game->game_status == 2)
   {
     for (i = 0; i < 4; i++)
     {
@@ -87,7 +87,7 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
   if (response.code == 0) {
     snprintf(response_str, sizeof(response_str), "%s|%s", "ok", response.data);
   } else {
-    snprintf(response_str, sizeof(response_str), "%s|%s", "ok", response.data);
+    snprintf(response_str, sizeof(response_str), "%s|%s", "ko", response.data);
   }
   printf("Sent %s\n", response_str);
   return (server_send_msg(identity, response_str, router));

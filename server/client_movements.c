@@ -3,7 +3,11 @@
 t_return jump(t_player *player, int max, char *data, t_game *game)
 {
   t_return ret;
+  int init_x;
+  int init_y;
 
+  init_x = player->pos_x;
+  init_y = player->pos_y;
   ret.data = "null";
   if (player->energy < 2)
     {
@@ -26,6 +30,13 @@ t_return jump(t_player *player, int max, char *data, t_game *game)
     {
       player->pos_y += player->orientation == 1 ? -2 : 2;
     }
+  if(is_player(game->players, player->pos_x, player->pos_y))
+    {
+      player->pos_x = init_x;
+      player->pos_y = init_y;
+      ret.code = 3;
+      return (ret);
+    }
   ret.code = 0;
   player->energy -= 2;
   return (ret);
@@ -34,7 +45,11 @@ t_return jump(t_player *player, int max, char *data, t_game *game)
 t_return forward(t_player *player, int max, char *data, t_game *game)
 {
   t_return ret;
+  int init_x;
+  int init_y;
 
+  init_x = player->pos_x;
+  init_y = player->pos_y;
   ret.data = "null";
   if (player->ap < 0.5)
     {
@@ -57,6 +72,13 @@ t_return forward(t_player *player, int max, char *data, t_game *game)
     {
       player->pos_y += player->orientation == 1 ? -1 : 1;
     }
+  if(is_player(game->players, player->pos_x, player->pos_y))
+    {
+      player->pos_x = init_x;
+      player->pos_y = init_y;
+      ret.code = 3;
+      return (ret);
+    }
   ret.code = 0;
   player->ap -= 0.5;
   return (ret);
@@ -65,7 +87,11 @@ t_return forward(t_player *player, int max, char *data, t_game *game)
 t_return backward(t_player *player, int max, char *data, t_game *game)
 {
   t_return ret;
+  int init_x;
+  int init_y;
 
+  init_x = player->pos_x;
+  init_y = player->pos_y;
   ret.data = "null";
   if (player->ap < 1)
     {
@@ -87,6 +113,13 @@ t_return backward(t_player *player, int max, char *data, t_game *game)
   else
     {
       player->pos_y += player->orientation == 1 ? -1 : 1;
+    }
+  if(is_player(game->players, player->pos_x, player->pos_y))
+    {
+      player->pos_x = init_x;
+      player->pos_y = init_y;
+      ret.code = 3;
+      return (ret);
     }
   ret.code = 0;
   player->ap -= 1;

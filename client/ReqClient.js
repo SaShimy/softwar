@@ -34,7 +34,7 @@ class ReqClient {
 				await this._wait(1);
 				i++;
 			}
-			return this.requests[this.requests.length-1].response;
+			return this.requests[this.requests.length-1].response.split("|");
 		})(message);
 	};
 
