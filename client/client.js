@@ -10,7 +10,8 @@ const GAME = {
 	],
 	energyCells: [
 		{x:3, y:2},
-	]
+	],
+	ap: 0
 };
 
 const isPlayer = (x, y) => {
@@ -35,7 +36,7 @@ args.options([
 	{name: "pubPort", description: "Port of the pub sub server.", defaultValue: 4243},
 	{name: "id", description: "Identity of the client."}]);
 const {reqPort, pubPort, id} = args.parse(process.argv);
-// const reqClient = new ReqClient(reqPort, id);
+const reqClient = new ReqClient(reqPort, id);
 const updateScreen = () => {
 	console.log("test")
 	process.stdout.write("\033[2J");
@@ -58,19 +59,33 @@ const updateScreen = () => {
 const pubClient = zmq.socket("sub");
 pubClient.on("message", (channel, message) => {
 	const notif = JSON.parse(message.toString().match(/\{.*\}/)[0]);
-	updateScreen();
-	// if (notif.notification_type === 0) {
-	// 	GAME.mapSize = notif.data.map_size;
-	// 	GAME.status = notif.data.game_status;
-	// 	GAME.players = notif.data.players;
-	// 	GAME.energyCells = notif.data.energy_cells;
-	// }
+	if (GAME.status >= 1) {
+		updateScreen();
+		GAME.ap = 1;
+	}
+	if (notif.notification_type === 0) {
+		GAME.mapSize = notif.data.map_size;
+		GAME.status = notif.data.game_status;
+		GAME.players = notif.data.players;
+		GAME.energyCells = notif.data.energy_cells;
+	}
 
 });
 pubClient.connect("tcp://127.0.0.1:"+pubPort);
 pubClient.subscribe("softwar");
 
+const waitRefill = async () => {
+	let refill = false;
+	while(!refill) {
+		await reqClient._wait(10);
+		if (GAME.ap === 1) {
+			refill = true;
+		}
+	}
+}
+
 ;(async () => {
+	await waitRefill();
     await reqClient.connect();
     let action_gather = 0;
     let action_attack = 0;
@@ -133,5 +148,6 @@ pubClient.subscribe("softwar");
 	// await reqClient.forward();
 })()
 .catch(err => {
-
+	console.log("Error:", err);
+	process.exit();
 });
