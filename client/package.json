@@ -4,7 +4,7 @@
   "description": "Client for project Softwar",
   "main": "client.js",
   "dependencies": {
-    "inquirer": "^3.3.0",
+    "args": "^3.0.7",
     "zeromq": "^4.6.0"
   },
   "devDependencies": {},
