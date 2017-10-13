@@ -13,7 +13,7 @@ SRC	=	server.c		\
 OBJ	=	$(SRC:%.c=%.o)
 RM	=	rm -f
 FLAGS	=	-Wall -Wextra -Werror -pedantic
-LIBS	=	-lczmq -lzmq -lpthread -D_REENTRANT
+LIBS	=	-lczmq -lzmq -lpthread -D_REENTRANT -ljansson
 
 $(NAME):	$(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME) $(LIBS)
