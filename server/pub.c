@@ -237,28 +237,6 @@ char *game_info(t_game *game)
                 players = concat(players, ", ");
         }
         players = concat(players, "]");
-
-
-//        t_cell *tmp;
-//        t_container container;
-//
-//        container = game->container;
-//
-//          tmp = container.first;
-
-//        map = "[";
-//            while (tmp != NULL)
-//            {
-//              map = concat(map, cell_info(tmp));
-//              tmp = tmp->next;
-//              if (tmp != NULL)
-//                  map = concat(map, ", ");
-//            }
-//            for (j = 0; j < game->conf->size; j++) {
-//
-//
-//        }
-//        map = concat(map, "]");
     }
 
     json = json_pack("{s:i,s:i,s:i,s:s}", "notification_type", 0, "map_size", game->conf->size, "game_status", game->game_status, "players", players);
