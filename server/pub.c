@@ -57,7 +57,7 @@ void *exec_pub(void *arg)
         {
             game->game_status = GAME_IN_PROGRESS;
             // TODO: SEND NOTIF GAME_STARTED
-            zstr_sendm (pub, "testing");
+            zstr_sendm (pub, "softwar");
             zstr_send(pub, "Game just started");
         }
         if (game->game_status == GAME_IN_PROGRESS) {
