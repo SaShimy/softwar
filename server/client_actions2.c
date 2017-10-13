@@ -143,32 +143,34 @@ t_return watch(t_player *player, int max, char *data, t_game *game)
     {
       if (is_player(game->players, tab_case[x].x, tab_case[x].y))
 	{
-	  free(str);
-	  tmp2 = concat(get_player_from_pos(game->players, tab_case[x].x, tab_case[x].y)->id, ",");
+	  // free(str);
+	  tmp2 = concat(get_player_from_pos(game->players, tab_case[x].x, tab_case[x].y)->id, x != 3 ? "," : "");
 	  str =  concat(tmp, tmp2);
-	  free(tmp);
-	  free(tmp2);
+	  // free(tmp);
+	  // free(tmp2);
 	  tmp = str;
 	}
       else if (is_cell(game, tab_case[x].x, tab_case[x].y))
 	{
-	  free(str);
-	  str =  concat(tmp, "energy,");
-	  free(tmp);
+	  // free(str);
+	  str =  concat(tmp, x != 3 ? "energy," : "energy");
+	  // free(tmp);
 	  tmp = str;
 	}
       else
 	{
-	  free(str);
-	  str =  concat(tmp, "empty,");
-	  free(tmp);
+	  // free(str);
+	  str =  concat(tmp, x != 3 ? "empty," : "empty");
+	  // free(tmp);
 	  tmp = str;
 	}
 		    
     }
-  free(str);
+  // free(str);
   str = concat(tmp, "]");
   ret.data = str;
+  ret.code = 0;
+  printf("Code: %d\nData: %s\n", ret.code, ret.data);
   return (ret);
 }
 //gather

@@ -142,6 +142,7 @@ t_return looking(t_player *player, int max, char *data, t_game *game);
 t_return selfid(t_player *player, int max, char *data, t_game *game);
 t_return selfstats(t_player* player, int max, char *data, t_game *game);
 t_return jump(t_player *player, int max, char *data, t_game *game);
+t_return watch(t_player *player, int max, char *data, t_game *game);
 
 int listen_rep(t_conf *conf, t_game *game);
 int server_send_msg(char *target, char *message, zsock_t *router);

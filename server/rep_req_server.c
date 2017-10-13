@@ -1,7 +1,7 @@
 
 #include "server.h"
 
-t_actions actions[9] = {
+t_actions actions[10] = {
   {"leftfwd", leftfwd},
   {"rightfwd", rightfwd},
   {"forward", forward},
@@ -11,6 +11,7 @@ t_actions actions[9] = {
   {"looking", looking},
   {"selfid", selfid},
   {"selfstats", selfstats},
+  {"watch", watch},
 };
 
 int server_send_msg(char *target, char *message, zsock_t *router) {
@@ -68,7 +69,7 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
     {
       response.code = 1;
     }
-    for (i = 0; i < 9; i++)
+    for (i = 0; i < 10; i++)
     {
       if (strcmp(action, actions[i].name) == 0)
       {
