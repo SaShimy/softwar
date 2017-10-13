@@ -83,7 +83,10 @@ pubClient.on("message", (channel, message) => {
 	}
 	if (GAME.status >= 1 && PLAYER.alive) {
 		updateScreen();
-		PLAYER.ap = 1;
+	    PLAYER.ap = 1;
+	    if(PLAYER.action_attack < 0) {
+		PLAYER.action_atttack++;
+	    }
 	}
 	if (!PLAYER.alive) {
 		console.log("You are dead.");
@@ -107,14 +110,15 @@ const waitRefill = async () => {
     await waitRefill();
     await reqClient.connect();
     let action_gather = 0;
-    let action_attack = 0;
     let action_leftfwd = 0;
     let action_rightfwd = 0;
     while (1) {
 	if (action_gather == 1) {
 	    const energy = await reqClient.selfstats();
 	    if(energy < 85) {
-		await waitRefill();
+		if(PLAYER.ap < 1) {
+		    await waitRefill();
+		}
 		await reqClient.gather;
 	    }
 	    action_gather = 0;
@@ -123,22 +127,30 @@ const waitRefill = async () => {
 	for (let i = 0; i < tab.length && tab[i] == "empty"; i++);
 	if(tab[i] == "energy") {
 	    if(i == 0) {
-		await waitRefill();
+		if(PLAYER.ap < 0.5) {
+		    await waitRefill();
+		}
 		await reqClient.forward();
 		action_gather = 1;
 		//await waitRefill();
 	    } else if (i == 1) {
-		try {
-		    await waitRefill();		    
+		try {		    
 		    await reqClient.jump();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.leftfwd();
 		    action_gather = 1;
 		    //await waitRefill();
 		} catch(e) {
-		    await waitRefill();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.forward();
 		    await reqClient.forward();
-		    await waitRefill();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.leftfwd();
 		    action_gather = 1;
 		}
@@ -147,7 +159,9 @@ const waitRefill = async () => {
 		    await reqClient.jump();
 		    action_gather = 1;
 		} catch(e) {
-		    await waitRefill();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.forward();
 		    await reqClient.forward();
 		    action_gather = 1;
@@ -155,16 +169,22 @@ const waitRefill = async () => {
 		
 	    } else if (i == 3) {
 		try {
-		    await waitRefill();
 		    await reqClient.jump();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.rightfwd();
 		    action_gather = 1;
 		    //await waitRefill();
 		} catch(e) {
-		    await waitRefill();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.forward();
 		    await reqClient.forward();
-		    await waitRefill();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.rightfwd();
 		    action_gather = 1;
 		}
@@ -173,20 +193,24 @@ const waitRefill = async () => {
 	} else if(tab[i] != "empty"){
 	    if(action_attack >= 0) {
 		try {
-		    await waitRefill();
+		    if(PLAYER.ap < 1) {
+			await waitRefill();
+		    }
 		    await reqClient.attack();
 		} catch(e) {
 		}
-		action_attack = -2;
+		PLAYER.action_attack = -2;
 	    }
 	} else {
 	    try {
+		if(PLAYER.ap < 0.5) {
+		    await waitRefill();
+		}
 		await reqClient.forward();
 	    } catch(e) {
 		    await reqClient.left();
 	    }
 	}
-	//action_attack++;
     }
 	/*await reqClient.connect();
 	await reqClient.forward();
