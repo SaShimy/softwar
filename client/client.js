@@ -11,8 +11,13 @@ const GAME = {
 	energyCells: [
 		{x:3, y:2},
 	],
-	ap: 0
 };
+
+const PLAYER = {
+	ap: 0,
+	action_attack: 0,
+	alive: true
+}
 
 const isPlayer = (x, y) => {
 	for(const player of GAME.players) {
@@ -59,17 +64,31 @@ const updateScreen = () => {
 const pubClient = zmq.socket("sub");
 pubClient.on("message", (channel, message) => {
 	const notif = JSON.parse(message.toString().match(/\{.*\}/)[0]);
-	if (GAME.status >= 1) {
-		updateScreen();
-		GAME.ap = 1;
-	}
 	if (notif.notification_type === 0) {
 		GAME.mapSize = notif.data.map_size;
 		GAME.status = notif.data.game_status;
 		GAME.players = notif.data.players;
 		GAME.energyCells = notif.data.energy_cells;
 	}
-
+	if (notif.notification_type === 3) {
+		if (notif.data.identity === reqClient.identity) {
+			PLAYER.alive = false;
+		} else {
+			console.log(`Client ${notif.data.identity} died.`);
+		}
+	}
+	if (notif.notification_type === 4) {
+		console.log("You won!");
+		process.exit();
+	}
+	if (GAME.status >= 1 && PLAYER.alive) {
+		updateScreen();
+		PLAYER.ap = 1;
+	}
+	if (!PLAYER.alive) {
+		console.log("You are dead.");
+		process.exit();
+	}
 });
 pubClient.connect("tcp://127.0.0.1:"+pubPort);
 pubClient.subscribe("softwar");
@@ -78,7 +97,7 @@ const waitRefill = async () => {
 	let refill = false;
 	while(!refill) {
 		await reqClient._wait(10);
-		if (GAME.ap === 1) {
+		if (PLAYER.ap === 1) {
 			refill = true;
 		}
 	}
