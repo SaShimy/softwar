@@ -64,11 +64,16 @@ const updateScreen = () => {
 const pubClient = zmq.socket("sub");
 pubClient.on("message", (channel, message) => {
 	const notif = JSON.parse(message.toString().match(/\{.*\}/)[0]);
+	console.log(notif);
 	if (notif.notification_type === 0) {
 		GAME.mapSize = notif.data.map_size;
 		GAME.status = notif.data.game_status;
 		GAME.players = notif.data.players;
 		GAME.energyCells = notif.data.energy_cells;
+	}
+	if (GAME.status >= 1 && PLAYER.alive) {
+		updateScreen();
+		PLAYER.ap = 1;
 	}
 	if (notif.notification_type === 3) {
 		if (notif.data.identity === reqClient.identity) {
@@ -80,10 +85,6 @@ pubClient.on("message", (channel, message) => {
 	if (notif.notification_type === 4) {
 		console.log("You won!");
 		process.exit();
-	}
-	if (GAME.status >= 1 && PLAYER.alive) {
-		updateScreen();
-		PLAYER.ap = 1;
 	}
 	if (!PLAYER.alive) {
 		console.log("You are dead.");
