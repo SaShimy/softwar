@@ -69,8 +69,8 @@ int createPlayer(char *data, t_game *game)
   player->id = data;
   player->energy = 50;
   player->ap = 1;
-  
-  player->player = game->players_length;
+
+  player->player = game->players_length+1;
   getPos(game, player);
   if (player->pos_y == 0)
     {
@@ -80,14 +80,15 @@ int createPlayer(char *data, t_game *game)
     {
       player->orientation = 1;
     }
+
   game->players[game->players_length] = *player;
   game->players_length += 1;
   printf("player created\n");
   if (game->players_length == 4) {
     game->game_status = 1;
   }
-  showInfoUser(player);
-  
+//  showInfoUser(player);
+
   return (0);
 }
 
@@ -97,35 +98,25 @@ t_return identify(char *data, t_game *game)
   t_return ret;
 
   ret.data = "null";
-  printf("ici\n");
-  //printf("x:%d, , %d, %s", isValid(data), strlen(data), data);
   if (isValid(data) != 0)
     {
-      printf("ici2\n");
-      
       ret.code = 2;
       return (ret);//le data est invalide
     }
-  printf("ici1\n");
   //for (i=0; game->players[i].id != NULL; i++)
   for(i=0; i < game->players_length; i++)
     {
       if (strcmp(data, game->players[i].id) == 0)
 	{
-	  printf("ici3\n");
-	  
 	  ret.code = 3;
 	  return (ret);// ko|identity already exist
 	}
     }
   if (i == 4)
     {
-      printf("ici4\n");
-      
       ret.code = 4;
       return (ret); // ko|game full
     }
-  printf("la\n");
   ret.code = createPlayer(data,game);
   return (ret);
 }

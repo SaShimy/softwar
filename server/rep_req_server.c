@@ -87,7 +87,6 @@ int listen_rep(t_conf *conf, t_game *game) {
 
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);
-    printf("DONE\n");
     server_rcv_msg(message, game, router);
     // server_send_msg(message, router);
   }

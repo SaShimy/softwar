@@ -68,7 +68,7 @@ void *exec_pub(void *arg)
 //    printf("%d\n", thread->game->game_status);
         while (!zsys_interrupted) {
             zstr_sendm (pub, "softwar");
-            zstr_sendf(pub, "%d", game->players_length);
+            zstr_sendf(pub, "Game status: %d", game->game_status);
 //            zstr_sendm (pub, "softwar");
 //            zstr_send(pub, "Cycle");
             if (game->game_status == GAME_STARTED)
