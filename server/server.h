@@ -169,7 +169,7 @@ char *game_info(t_game *game);
 char *notification_game_finished();
 char *notification_client_win(char *id);
 char *notification_client_lose(char *id);
-
+char *player_info(t_player player);
 
 
 /*
@@ -180,4 +180,7 @@ int is_cell(t_game *game, int x, int y);
 t_player *get_player_from_pos(t_player player[4], int x, int y);
 t_cell *search_cell(t_container container, int x, int y);
 
+
+char* concat(const char *s1, const char *s2);
+char *cell_info(t_cell *cell);
 #endif
