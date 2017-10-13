@@ -72,7 +72,7 @@ int server_rcv_msg(zmsg_t *message, t_game *game, zsock_t *router)
     {
       if (strcmp(action, actions[i].name) == 0)
       {
-        response = actions[i].func(current_player, game->conf->size, "test");
+        response = actions[i].func(current_player, game->conf->size, "test", game);
         done = true;
       }
     }
@@ -99,7 +99,6 @@ int listen_rep(t_conf *conf, t_game *game) {
 
   while (!zsys_interrupted) {
     zmsg_t *message = zmsg_recv(router);
-    printf("DONE\n");
     server_rcv_msg(message, game, router);
     // server_send_msg(message, router);
   }
