@@ -61,9 +61,19 @@ void *exec_pub(void *arg)
             zstr_send(pub, "Game just started");
         }
         if (game->game_status == GAME_IN_PROGRESS) {
+            int j;
+            for (j = 0; j < 4; j++) {
+                if (game->players[j].energy >= 100) {
+                    // TODO : SEND NOTIFICATION CLIENT_LOSE
+                    zstr_sendm (pub, "softwar");
+                    zstr_sendf(pub, "CLIENT WIN: %s", game->players[j].id);
+                    game->players[j].alive = false;
+                }
+            }
             refresh_cycle(game);
             if (game->players_length < 2) {
-                for (int i = 0; i < 4; i++) {
+                int i;
+                for (i = 0; i < 4; i++) {
                     if (game->players[i].alive) {
                         // TODO : SEND NOTIFICATION CLIENT_WIN
                         zstr_sendm (pub, "softwar");
@@ -124,7 +134,8 @@ int init_pub_thread(t_game *game, t_conf *conf)
 
 void refresh_cycle(t_game *game)
 {
-    for (int i = 0; i < 4; i++) {
+    int i;
+    for (i = 0; i < 4; i++) {
         if (game->players[i].alive) {
 
              if (game->players[i].energy > 2)
