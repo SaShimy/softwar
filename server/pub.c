@@ -228,7 +228,7 @@ char *game_info(t_game *game)
 //             }
 //        }
 //    }
-    json = json_pack("{s:i,s:i}", "map_size", game->conf->size, "game_status", game->game_status);
+    json = json_pack("{s:i,s:i,s:i}", "notification_type", 0, "map_size", game->conf->size, "game_status", game->game_status);
 //
     size_t size = json_dumpb(json, NULL, 0, 0);
 //
